@@ -4,6 +4,8 @@ import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.user.User;
+import javafx.collections.ObservableList;
+import ui.kitchenTask.SheetList;
 
 import java.util.ArrayList;
 
@@ -16,8 +18,6 @@ public class KitchenTaskManager {
     }
 
     public SummarySheet chooseSheet(SummarySheet sheet) throws UseCaseLogicException{
-        //User user = userMgr.getCurrentUser();
-        // TODO: ponerlo bien, ahora esta en modo prueba
 
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
@@ -37,9 +37,7 @@ public class KitchenTaskManager {
         this.selectedSheet = selectedSheet;
     }
 
-    public SummarySheet createSheet(Event event)  throws UseCaseLogicException{
-        //User user = userMgr.getCurrentUser();
-        // TODO: ponerlo bien, ahora esta en modo prueba
+    public SummarySheet createSheet(Event event) throws UseCaseLogicException, SummarySheetException {
 
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
@@ -47,15 +45,14 @@ public class KitchenTaskManager {
             throw new UseCaseLogicException();
         }
         else if(event.isRefered()){
-            // TODO: meter la excepción
+            throw new SummarySheetException();
         }
 
         SummarySheet s = new SummarySheet(event,user);
         event.setRefered();
 
+        this.setSelectedSheet(s);
         this.notifySheetAdded(s);
-
-        this.setSelectedSheet(s); // TODO: no se si habría que seleccionarlo
 
         return s;
     }
@@ -64,6 +61,10 @@ public class KitchenTaskManager {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateSheetAdded(s);
         }
+    }
+
+    public ObservableList<SummarySheet> getAllSummarySheets() {
+        return SummarySheet.loadAllSummarySheets();
     }
 
 

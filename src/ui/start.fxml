@@ -4,10 +4,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
 
-
 <FlowPane alignment="CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Start">
    <children>
-      <Button mnemonicParsing="false" text="Gestione dei compiti">
+      <Button mnemonicParsing="false" onAction="#beginKitchenTaskManager" text="Gestione dei compiti">
          <font>
             <Font size="15.0" />
          </font>

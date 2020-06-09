@@ -5,14 +5,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import ui.kitchenTask.KitchenTaskManager;
 
 import java.io.IOException;
 
 public class Main {
 
     @FXML
-    private AnchorPane paneConteiner;
+    private AnchorPane paneContainer;
 
     @FXML
     private FlowPane startPane;
@@ -20,24 +22,41 @@ public class Main {
     @FXML
     Start startPaneController;
 
-    public void initialize(){
+    BorderPane kitchenTaskManagementPane;
+    KitchenTaskManager kitchenTaskManagementPaneController;
 
-    }
+    public void initialize() {
+        startPaneController.setParent(this);
 
-    public void startKitchenTaskManager(){
-        paneConteiner.getChildren().remove(startPane);
-        try{
-            //CatERing.getInstance().getUserManager().fakeLogin();
-            Parent node = FXMLLoader.load(getClass().getResource("kitchenTask/kitchen-task-manager.fxml"));
-            paneConteiner.getChildren().add(node);
-            AnchorPane.setTopAnchor(node,0.0);
-            AnchorPane.setBottomAnchor(node,0.0);
-            AnchorPane.setLeftAnchor(node,0.0);
-            AnchorPane.setRightAnchor(node,0.0);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("kitchenTask/kitchen-task-manager.fxml"));
+        try {
+            kitchenTaskManagementPane = loader.load();
+            kitchenTaskManagementPaneController = loader.getController();
+            kitchenTaskManagementPaneController.setMainPaneController(this);
 
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
+
     }
+
+    public void startKitchenTaskManager() {
+        CatERing.getInstance().getUserManager().fakeLogin("Lidia");
+        kitchenTaskManagementPaneController.initialize();
+        paneContainer.getChildren().remove(startPane);
+        paneContainer.getChildren().add(kitchenTaskManagementPane);
+        AnchorPane.setTopAnchor(kitchenTaskManagementPane, 0.0);
+        AnchorPane.setBottomAnchor(kitchenTaskManagementPane, 0.0);
+        AnchorPane.setLeftAnchor(kitchenTaskManagementPane, 0.0);
+        AnchorPane.setRightAnchor(kitchenTaskManagementPane, 0.0);
+
+    }
+
+    /*
+    public void showStartPane() {
+        startPaneController.initialize();
+        paneContainer.getChildren().remove(kitchenTaskManagementPane);
+        paneContainer.getChildren().add(startPane);
+    }
+    */
 }

@@ -8,6 +8,7 @@ public class Start{
 
     @FXML
     void beginKitchenTaskManager() {
+
         mainPaneController.startKitchenTaskManager();
 
     }
