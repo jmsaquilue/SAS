@@ -52,11 +52,10 @@ public class Main {
 
     }
 
-    /*
     public void showStartPane() {
-        startPaneController.initialize();
         paneContainer.getChildren().remove(kitchenTaskManagementPane);
         paneContainer.getChildren().add(startPane);
     }
-    */
+
+
 }

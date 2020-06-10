@@ -33,7 +33,7 @@ public class SummarySheet {
     }
 
     public boolean isCreator(User user) {
-        return user == this.creator;
+        return user.getId() == this.creator.getId();
     }
 
     @Override

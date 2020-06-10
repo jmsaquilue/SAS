@@ -10,6 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -31,9 +32,10 @@ public class SheetList {
     ListView<SummarySheet> sheetList;
 
 
+
     @FXML
     public void nuovoButtonPressed(){
-        ArrayList<Event> choices = CatERing.getInstance().getKitchenTaskManager().getAvailableEvents();
+        ArrayList<Event> choices = CatERing.getInstance().getEventManager().getAvailableEvents();
 
         if (choices.size() > 0) {
             ChoiceDialog<Event> dialog = new ChoiceDialog<>(choices.get(0), choices);
@@ -46,13 +48,36 @@ public class SheetList {
                 try {
                     SummarySheet s = CatERing.getInstance().getKitchenTaskManager().createSheet(result.get());
                     sheetListItems.add(s);
-                } catch (Exception ex) {
+                } catch (UseCaseLogicException | SummarySheetException ex) {
                     ex.printStackTrace();
                 }
             }
         }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Non ci sono eventi disponibili.");
+            alert.showAndWait();
+        }
     }
 
+
+    @FXML
+    public void apriButtonPressed(){
+        try {
+            SummarySheet s = sheetList.getSelectionModel().getSelectedItem();
+            CatERing.getInstance().getKitchenTaskManager().chooseSheet(s);
+            // TODO: CU 2
+        } catch (UseCaseLogicException | SummarySheetException ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void fineButtonPressed(){
+        kitchenTaskManagementController.endKitchenTaskManager();
+    }
 
 
     public void initialize() {
@@ -61,6 +86,7 @@ public class SheetList {
             sheetListItems = CatERing.getInstance().getKitchenTaskManager().getAllSummarySheets();
             sheetList.setItems(sheetListItems);
             sheetList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
             /*
             sheetList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SummarySheet>() {
                 @Override

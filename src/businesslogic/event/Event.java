@@ -50,7 +50,6 @@ public class Event {
 
 
     public static ArrayList<Event> loadAllEvent() {
-        // TODO: mucho que revisar
         String query = "SELECT * FROM Events WHERE id not in (SELECT event FROM SummarySheets)";
         ArrayList<Event> newEvents = new ArrayList<>();
         ArrayList<Event> oldEvents = new ArrayList<>();

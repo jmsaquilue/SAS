@@ -46,4 +46,9 @@ public class KitchenTaskManager {
         mainPaneController = main;
     }
 
+    public void endKitchenTaskManager() {
+        mainPaneController.showStartPane();
+    }
+
+
 }

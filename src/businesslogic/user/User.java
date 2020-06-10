@@ -43,6 +43,7 @@ public class User {
         return result;
     }
 
+
     public boolean isChef() {
         return roles.contains(Role.CHEF);
     }
@@ -142,7 +143,6 @@ public class User {
             });
         }
 
-        System.out.println(u);
 
         return u;
     }

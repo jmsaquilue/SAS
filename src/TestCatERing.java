@@ -3,18 +3,25 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.kitchenTask.SummarySheet;
 import businesslogic.user.User;
+import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class TestCatERing {
     public static void main(String[] args) {
         try {
+            System.out.println("TEST DATABASE CONNECTION");
             //PersistenceManager.testSQLConnection();
-            CatERing.getInstance().getUserManager().fakeLogin("Paola");
-            //Event event = new Event("Guaza de tamango",new Date(2020,6-1,4) ); //quien coño cuenta los meses empezando por 0??
-            //SummarySheet s = CatERing.getInstance().getKitchenTaskManager().createSheet(event);
-            //System.out.println(s.toString());
+            System.out.println("TEST FAKE LOGIN");
+            CatERing.getInstance().getUserManager().fakeLogin("Lidia");
+            System.out.println(CatERing.getInstance().getUserManager().getCurrentUser());
+            System.out.println("TEST SELECTION");
+            // Importante avere al più un sheet caricato nella DB
+            ObservableList<SummarySheet> ss = CatERing.getInstance().getKitchenTaskManager().getAllSummarySheets();
+            SummarySheet s = CatERing.getInstance().getKitchenTaskManager().chooseSheet(ss.get(0));
+            System.out.println(s);
         }
         catch (Exception e){
             System.out.println("Error");

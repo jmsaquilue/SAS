@@ -13,7 +13,8 @@
       <FlowPane alignment="CENTER" hgap="10.0" prefHeight="38.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#nuovoButtonPressed" text="Nuovo" />
-            <Button mnemonicParsing="false" text="Esci" />
+            <Button mnemonicParsing="false" onAction="#apriButtonPressed" text="Apri" />
+            <Button mnemonicParsing="false" onAction="#fineButtonPressed" text="Fine" />
          </children>
       </FlowPane>
    </bottom>

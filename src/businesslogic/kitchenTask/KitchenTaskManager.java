@@ -17,7 +17,7 @@ public class KitchenTaskManager {
         this.eventReceivers = new ArrayList<>();
     }
 
-    public SummarySheet chooseSheet(SummarySheet sheet) throws UseCaseLogicException{
+    public SummarySheet chooseSheet(SummarySheet sheet) throws UseCaseLogicException, SummarySheetException {
 
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
@@ -25,7 +25,7 @@ public class KitchenTaskManager {
             throw new UseCaseLogicException();
         }
         else if (!sheet.isCreator(user)){
-            // TODO: meter la excepción
+            throw new SummarySheetException();
         }
 
         this.setSelectedSheet(sheet);
@@ -66,10 +66,6 @@ public class KitchenTaskManager {
 
     public ObservableList<SummarySheet> getAllSummarySheets() {
         return SummarySheet.loadAllSummarySheets();
-    }
-
-    public ArrayList<Event> getAvailableEvents() {
-        return Event.loadAllEvent();
     }
 
     public void addEventReceiver(TaskEventReceiver rec) {
