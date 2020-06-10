@@ -4,13 +4,21 @@ import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.kitchenTask.SummarySheet;
+import businesslogic.kitchenTask.SummarySheetException;
 import businesslogic.user.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class SheetList {
 
@@ -25,17 +33,24 @@ public class SheetList {
 
     @FXML
     public void nuovoButtonPressed(){
-        //TODO: al pretar el boton te lleva a otra ventana.
-        /*
-        try{
-           // CatERing.getInstance().getKitchenTaskManager().createSheet(currentEvent);
-        }
-        catch (UseCaseLogicException ex){
-            ex.printStackTrace();
-        }
+        ArrayList<Event> choices = CatERing.getInstance().getKitchenTaskManager().getAvailableEvents();
 
-         */
+        if (choices.size() > 0) {
+            ChoiceDialog<Event> dialog = new ChoiceDialog<>(choices.get(0), choices);
+            dialog.setTitle("Nuovo foglio riepilogativo.");
+            dialog.setHeaderText("Nuovo foglio riepilogativo.");
+            dialog.setContentText("scegli l'evento da organizzare:");
 
+            Optional<Event> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                try {
+                    SummarySheet s = CatERing.getInstance().getKitchenTaskManager().createSheet(result.get());
+                    sheetListItems.add(s);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
 

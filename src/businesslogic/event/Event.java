@@ -15,7 +15,6 @@ public class Event {
     private int id;
     private String name;
     private Date date;
-    private Boolean refered = false;
     private static Map<Integer, Event> loadedEvents = FXCollections.observableHashMap();
 
     public Event() {}
@@ -33,17 +32,25 @@ public class Event {
     }
 
     public boolean isRefered() {
-        return refered;
+        String query = "SELECT COUNT(*) FROM SummarySheets WHERE event='"+this.id+"';";
+        final int[] count = new int[1];
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                count[0] = rs.getInt(1);
+            }
+
+        });;
+
+        return count[0] > 0;
     }
 
     public int getId(){ return id;}
 
-    public void setRefered() {
-        this.refered = true;
-    }
 
 
-    public static ObservableList<Event> loadAllEvent() {
+    public static ArrayList<Event> loadAllEvent() {
+        // TODO: mucho que revisar
         String query = "SELECT * FROM Events WHERE id not in (SELECT event FROM SummarySheets)";
         ArrayList<Event> newEvents = new ArrayList<>();
         ArrayList<Event> oldEvents = new ArrayList<>();
@@ -56,23 +63,25 @@ public class Event {
                     Event e = loadedEvents.get(id);
                     e.name = rs.getString("name");
                     e.date = rs.getDate("date");
-                    e.refered = false;
                     oldEvents.add(e);
                 } else {
                     Event e = new Event();
                     e.id = id;
                     e.name = rs.getString("name");
                     e.date = rs.getDate("date");
-                    e.refered = false;
                     newEvents.add(e);
                 }
             }
         });
 
-        for (Event e: newEvents) {
+        for (Event e: newEvents){
+            oldEvents.add(e);
             loadedEvents.put(e.id, e);
         }
-        return FXCollections.observableArrayList(loadedEvents.values());
+
+        return oldEvents;
+
+
     }
 
     public static Event loadEventById(int id) {

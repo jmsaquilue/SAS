@@ -2,6 +2,7 @@ package businesslogic;
 
 import businesslogic.kitchenTask.KitchenTaskManager;
 import businesslogic.user.UserManager;
+import persistence.SummarySheetPersistence;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -16,9 +17,13 @@ public class CatERing {
     private KitchenTaskManager ktMgr;
     private UserManager userMgr;
 
+    private SummarySheetPersistence summarySheetPersistence;
+
     private CatERing(){
         ktMgr = new KitchenTaskManager();
         userMgr = new UserManager();
+        summarySheetPersistence = new SummarySheetPersistence();
+        ktMgr.addEventReceiver(summarySheetPersistence);
 
     }
 

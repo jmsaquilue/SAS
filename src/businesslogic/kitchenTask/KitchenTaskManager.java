@@ -41,6 +41,7 @@ public class KitchenTaskManager {
 
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
+
         if(!user.isChef()){
             throw new UseCaseLogicException();
         }
@@ -48,8 +49,8 @@ public class KitchenTaskManager {
             throw new SummarySheetException();
         }
 
+
         SummarySheet s = new SummarySheet(event,user);
-        event.setRefered();
 
         this.setSelectedSheet(s);
         this.notifySheetAdded(s);
@@ -67,5 +68,15 @@ public class KitchenTaskManager {
         return SummarySheet.loadAllSummarySheets();
     }
 
+    public ArrayList<Event> getAvailableEvents() {
+        return Event.loadAllEvent();
+    }
 
+    public void addEventReceiver(TaskEventReceiver rec) {
+        this.eventReceivers.add(rec);
+    }
+
+    public void removeEventReceiver(TaskEventReceiver rec) {
+        this.eventReceivers.remove(rec);
+    }
 }
