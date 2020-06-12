@@ -37,11 +37,6 @@ public class SummarySheet {
         return user.getId() == this.creator.getId();
     }
 
-    public Task createTask(Recipe r){
-        Task t= new Task(r);
-        list.add(t);
-        return t;
-    }
 
     @Override
     public String toString() {
@@ -111,6 +106,12 @@ public class SummarySheet {
             loadedSheets.put(s.id, s);
         }
         return FXCollections.observableArrayList(loadedSheets.values());
+    }
+
+    public Task createTask(Recipe r){
+        Task t= new Task(r);
+        list.add(t);
+        return t;
     }
 
 }

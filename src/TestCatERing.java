@@ -2,6 +2,8 @@ import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.kitchenTask.SummarySheet;
+import businesslogic.kitchenTask.Task;
+import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
@@ -22,6 +24,11 @@ public class TestCatERing {
             ObservableList<SummarySheet> ss = CatERing.getInstance().getKitchenTaskManager().getAllSummarySheets();
             SummarySheet s = CatERing.getInstance().getKitchenTaskManager().chooseSheet(ss.get(0));
             System.out.println(s);
+            System.out.println("TEST ADD RECIPE");
+            Recipe r = new Recipe("Foo","Bar");
+            Task t = CatERing.getInstance().getKitchenTaskManager().addRecipe(r);
+            // TODO: metodo para escribir por pantalla un task
+            System.out.println(t);
         }
         catch (Exception e){
             System.out.println("Error");

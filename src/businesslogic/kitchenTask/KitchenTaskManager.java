@@ -67,12 +67,22 @@ public class KitchenTaskManager {
             throw new UseCaseLogicException();
         }
 
-        return selectedSheet.createTask(r);
+        Task t = selectedSheet.createTask(r);
+
+        this.notifyRecipeAdded(t);
+
+        return t;
     }
 
     private void notifySheetAdded(SummarySheet s) {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateSheetAdded(s);
+        }
+    }
+
+    private void notifyRecipeAdded(Task t) {
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateRecipeAdded(t);
         }
     }
 
