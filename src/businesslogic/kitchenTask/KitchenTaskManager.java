@@ -59,15 +59,12 @@ public class KitchenTaskManager {
         return s;
     }
 
-    public Task addRecipe(Recipe r){
+    public Task addRecipe(Recipe r)throws UseCaseLogicException{
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
 
         if(!user.isChef()){
             throw new UseCaseLogicException();
-        }
-        else if(event.isRefered()){
-            throw new SummarySheetException();
         }
 
         return selectedSheet.createTask(r);
