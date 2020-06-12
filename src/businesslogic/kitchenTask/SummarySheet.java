@@ -1,6 +1,7 @@
 package businesslogic.kitchenTask;
 
 import businesslogic.event.Event;
+import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,12 @@ public class SummarySheet {
 
     public boolean isCreator(User user) {
         return user.getId() == this.creator.getId();
+    }
+
+    public Task createTask(Recipe r){
+        Task t= new Task(r);
+        list.add(t);
+        return t;
     }
 
     @Override

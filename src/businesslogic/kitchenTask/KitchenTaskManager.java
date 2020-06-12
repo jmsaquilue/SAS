@@ -3,6 +3,7 @@ package businesslogic.kitchenTask;
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
+import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
 import ui.kitchenTask.SheetList;
@@ -56,6 +57,20 @@ public class KitchenTaskManager {
         this.notifySheetAdded(s);
 
         return s;
+    }
+
+    public Task addRecipe(Recipe r){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+
+
+        if(!user.isChef()){
+            throw new UseCaseLogicException();
+        }
+        else if(event.isRefered()){
+            throw new SummarySheetException();
+        }
+
+        return selectedSheet.createTask(r);
     }
 
     private void notifySheetAdded(SummarySheet s) {
