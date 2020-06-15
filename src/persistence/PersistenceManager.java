@@ -1,12 +1,10 @@
 package persistence;
 
-import businesslogic.user.User;
-
 import java.sql.*;
 
 public class PersistenceManager {
 
-    private static String url = "jdbc:mysql://localhost:3306/catering?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+    private static String url = "jdbc:mysql://localhost:3306/catering";//?serverTimezone=UTC&autoReconnect=true&useSSL=false";
     private static String username = "admin";
     private static String password = "admin";
 

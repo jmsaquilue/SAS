@@ -2,8 +2,11 @@ package businesslogic;
 
 import businesslogic.event.EventManager;
 import businesslogic.kitchenTask.KitchenTaskManager;
+import businesslogic.recipe.RecipeManager;
 import businesslogic.user.UserManager;
 import persistence.SummarySheetPersistence;
+
+;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -18,6 +21,7 @@ public class CatERing {
     private KitchenTaskManager ktMgr;
     private UserManager userMgr;
     private EventManager eventMgr;
+    private RecipeManager recipeMgr;
 
     private SummarySheetPersistence summarySheetPersistence;
 
@@ -25,6 +29,7 @@ public class CatERing {
         ktMgr = new KitchenTaskManager();
         userMgr = new UserManager();
         eventMgr = new EventManager();
+        recipeMgr = new RecipeManager();
 
         summarySheetPersistence = new SummarySheetPersistence();
         ktMgr.addEventReceiver(summarySheetPersistence);
@@ -42,5 +47,7 @@ public class CatERing {
     public EventManager getEventManager() {
         return eventMgr;
     }
+
+    public RecipeManager getRecipeManager(){return  recipeMgr;}
 
 }

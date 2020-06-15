@@ -6,7 +6,6 @@ import businesslogic.event.Event;
 import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
-import ui.kitchenTask.SheetList;
 
 import java.util.ArrayList;
 
@@ -59,7 +58,11 @@ public class KitchenTaskManager {
         return s;
     }
 
-    public Task addRecipe(Recipe r)throws UseCaseLogicException{
+    public SummarySheet getSelectedSheet() {
+        return selectedSheet;
+    }
+
+    public Task addRecipe(Recipe r) throws UseCaseLogicException, SummarySheetException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
 

@@ -1,5 +1,6 @@
 package businesslogic.kitchenTask;
 
+import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.recipe.Recipe;
 import businesslogic.user.User;
@@ -108,8 +109,13 @@ public class SummarySheet {
         return FXCollections.observableArrayList(loadedSheets.values());
     }
 
-    public Task createTask(Recipe r){
-        Task t= new Task(r);
+    public int getId(){
+        return id;
+    }
+
+    public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
+        Task t= new Task(r, this.getId());
+        t.saveTask(t);
         list.add(t);
         return t;
     }
