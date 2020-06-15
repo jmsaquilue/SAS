@@ -67,7 +67,7 @@ public class SheetList {
         try {
             SummarySheet s = sheetList.getSelectionModel().getSelectedItem();
             CatERing.getInstance().getKitchenTaskManager().chooseSheet(s);
-            // TODO: CU 2
+            kitchenTaskManagementController.openSheet();
         } catch (UseCaseLogicException | SummarySheetException ex){
             ex.printStackTrace();
         }

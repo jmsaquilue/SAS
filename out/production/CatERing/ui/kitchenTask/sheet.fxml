@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane prefHeight="356.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.Sheet">
+   <center>
+      <FlowPane alignment="CENTER" prefHeight="209.0" prefWidth="560.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="CENTER" mnemonicParsing="false" prefHeight="31.0" prefWidth="118.0" text="AddRecipe" />
+         </children>
+      </FlowPane>
+   </center>
+   <top>
+      <Label prefHeight="32.0" prefWidth="690.0" text="Info Sheet" BorderPane.alignment="CENTER" />
+   </top>
+   <bottom>
+      <FlowPane alignment="CENTER" prefHeight="43.0" prefWidth="690.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="Fine" />
+         </children>
+      </FlowPane>
+   </bottom>
+</BorderPane>

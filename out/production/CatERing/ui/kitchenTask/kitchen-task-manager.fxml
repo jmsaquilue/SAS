@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.KitchenTaskManager">
+<BorderPane fx:id="containerPane" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.KitchenTaskManager">
    <top>
       <Label fx:id="userLabel" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="484.0" text="Info user:" BorderPane.alignment="TOP_LEFT">
          <opaqueInsets>

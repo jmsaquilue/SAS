@@ -3,11 +3,11 @@ package ui;
 import businesslogic.CatERing;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import ui.kitchenTask.KitchenTaskManager;
+import ui.kitchenTask.RecipeContent;
 
 import java.io.IOException;
 
@@ -24,6 +24,7 @@ public class Main {
 
     BorderPane kitchenTaskManagementPane;
     KitchenTaskManager kitchenTaskManagementPaneController;
+    RecipeContent recipeContentPaneController;
 
     public void initialize() {
         startPaneController.setParent(this);
@@ -56,6 +57,5 @@ public class Main {
         paneContainer.getChildren().remove(kitchenTaskManagementPane);
         paneContainer.getChildren().add(startPane);
     }
-
 
 }

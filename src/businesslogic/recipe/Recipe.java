@@ -36,18 +36,26 @@ public class Recipe {
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 int id = rs.getInt("id");
-                    String n=rs.getNString("name");
-                    String d=rs.getNString("description");
+                    String n=rs.getString("name");
+                    String d=rs.getString("description");
                     Recipe r = new Recipe(id, n, d);
                     recipes.add(r);
             }
         });
 
-        // TODO: es posible que haya que cargar las task
 
         for (Recipe s: recipes) {
             recipesLoaded.put(s.id, s);
         }
         return FXCollections.observableArrayList(recipesLoaded.values());
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
