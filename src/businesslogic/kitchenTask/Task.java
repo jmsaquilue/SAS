@@ -47,8 +47,8 @@ public class Task {
         return idSummary;
     }
 
-    public static void saveTask(Task t){    //NUEVA TABLA TASK
-        String querry = "INSERT INTO catering.Task (timeEstimate, quantity, complete, recipeid, summaryid) VALUES (?, ?, ?, ?, ?);";
+    public static void saveTask(Task t){
+        String querry = "INSERT INTO catering.Tasks (timeEstimate, quantity, complete, recipeid, summaryid) VALUES (?, ?, ?, ?, ?);";
         int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {

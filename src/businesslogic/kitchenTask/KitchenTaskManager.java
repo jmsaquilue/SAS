@@ -77,6 +77,11 @@ public class KitchenTaskManager {
         return t;
     }
 
+    /*
+    public ObservableList<Shift> getShifts(){
+        return ShiftBoard.loadAllShift();
+    }*/
+
     private void notifySheetAdded(SummarySheet s) {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateSheetAdded(s);

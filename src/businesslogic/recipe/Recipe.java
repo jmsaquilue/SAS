@@ -1,5 +1,6 @@
 package businesslogic.recipe;
 
+import businesslogic.kitchenTask.SummarySheet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import persistence.PersistenceManager;
@@ -28,8 +29,8 @@ public class Recipe {
     public int getId(){
         return id;
     }
-    public static ObservableList<Recipe> loadRecipes(){
-        String query = "SELECT * FROM Recipes;";
+    public static ObservableList<Recipe> loadAvailableRecipes(SummarySheet sheet){
+        String query = "SELECT * FROM Recipes WHERE id not in (SELECT recipeid FROM Tasks WHERE summaryid='"+sheet.getId()+"');";
         ArrayList<Recipe> recipes = new ArrayList<>();
 
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -48,6 +49,25 @@ public class Recipe {
             recipesLoaded.put(s.id, s);
         }
         return FXCollections.observableArrayList(recipesLoaded.values());
+    }
+
+    public static ObservableList<Recipe> loadSelectedRecipes(SummarySheet sheet){
+        String query = "SELECT * FROM Recipes WHERE id in (SELECT recipeid FROM Tasks WHERE summaryid='"+sheet.getId()+"');";
+        ArrayList<Recipe> recipes = new ArrayList<>();
+
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                int id = rs.getInt("id");
+                String n=rs.getString("name");
+                String d=rs.getString("description");
+                Recipe r = new Recipe(id, n, d);
+                recipes.add(r);
+            }
+        });
+
+
+        return FXCollections.observableArrayList(recipes);
     }
 
     @Override

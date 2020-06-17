@@ -1,6 +1,7 @@
 package ui.kitchenTask;
 
 import businesslogic.CatERing;
+import businesslogic.kitchenTask.SummarySheet;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -62,8 +63,8 @@ public class KitchenTaskManager {
     }
 
 
-    public void openSheet() {
-        recipePaneController.initialize();
+    public void openSheet(SummarySheet sheet) {
+        recipePaneController.initialize(sheet);
         containerPane.setCenter(recipeContentPane);
     }
 

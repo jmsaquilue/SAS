@@ -1,6 +1,7 @@
 package businesslogic.recipe;
 
 import businesslogic.UseCaseLogicException;
+import businesslogic.kitchenTask.SummarySheet;
 import javafx.collections.ObservableList;
 
 public class RecipeManager {
@@ -13,7 +14,11 @@ public class RecipeManager {
         return currentRecipe;
     }
 
-    public ObservableList<Recipe> getAllRecipes(){
-        return currentRecipe.loadRecipes();
+    public ObservableList<Recipe> getAllAvailableRecipes(SummarySheet sheet){
+        return currentRecipe.loadAvailableRecipes(sheet);
+    }
+
+    public ObservableList<Recipe> getAllSelectedRecipes(SummarySheet sheet) {
+        return currentRecipe.loadSelectedRecipes(sheet);
     }
 }
