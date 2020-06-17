@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class PersistenceManager {
 
-    private static String url = "jdbc:mysql://localhost:3306/catering?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+    private static String url = "jdbc:mysql://localhost:3306/catering?serverTimezone=UTC&autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8";
     private static String username = "admin";
     private static String password = "admin";
 
