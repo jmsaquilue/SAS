@@ -16,13 +16,25 @@ public class Task {
     private boolean complete;
     private int idSummary;
     private Recipe isPrepared; //No me gusta mucho el nombre
-    private ArrayList<Shift> shifts; // He cambiado el nombre, habría que actualizar los gráficos
+
+    public Task(){
+
+    }
 
     public Task(Recipe r, int id){
         quantity=1;
         complete=false;
         isPrepared=r;
         idSummary=id;
+    }
+
+    public Task(int id, int timeEstimate, int quantity, boolean complete, int idSummary, Recipe recipe) {
+        this.id = id;
+        this.timeEstimate = timeEstimate;
+        this.quantity = quantity;
+        this.complete = complete;
+        this.idSummary = idSummary;
+        this.isPrepared = recipe;
     }
 
     public int getId(){

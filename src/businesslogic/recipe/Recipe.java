@@ -18,6 +18,10 @@ public class Recipe {
     private static Map<Integer, Recipe> recipesLoaded = FXCollections.observableHashMap();
 
 
+    public Recipe(){
+
+    }
+
 
     // Constructor per le prove
     public Recipe(int i, String name, String description){
@@ -29,6 +33,28 @@ public class Recipe {
     public int getId(){
         return id;
     }
+
+    public static Recipe loadRecipeById(int id) {
+
+        if (recipesLoaded.containsKey(id)) return recipesLoaded.get(id);
+
+        Recipe r = new Recipe();
+        String userQuery = "SELECT * FROM Recipes WHERE id='"+id+"'";
+        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                r.id = rs.getInt("id");
+                r.name = rs.getString("name");
+                r.description = rs.getString("description");
+            }
+        });
+
+        return r;
+    }
+
+
+
+
     public static ObservableList<Recipe> loadAvailableRecipes(SummarySheet sheet){
         String query = "SELECT * FROM Recipes WHERE id not in (SELECT recipeid FROM Tasks WHERE summaryid='"+sheet.getId()+"');";
         ArrayList<Recipe> recipes = new ArrayList<>();

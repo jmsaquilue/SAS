@@ -14,11 +14,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Shift {
+    private int id;
     private int start;
     private int end;
     private Date day;
-    private Boolean available;
-    private ArrayList<Cook> cooks; // Creo que debería ser un cocinero por turno
+    //private Boolean available;
+    //private Cook cook;
+    //private Task task;
+
+    public Shift(int id,int start,int end,Date day){
+
+    }
 
 
+    public Integer getId() {
+        return id;
+    }
 }

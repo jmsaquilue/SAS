@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class User {
+
+
     public static enum Role{SERVIZIO,CUOCO,CHEF,ORGANIZZATORE}
     private int id;
     private String username;
@@ -28,6 +30,17 @@ public class User {
         id = 0;
         username = "";
         this.roles = new HashSet<>();
+    }
+
+    public User(int id, String username, String password, String name, String surname, String gender, int age, String email) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.gender = gender;
+        this.age = age;
+        this.email = email;
     }
 
     @Override

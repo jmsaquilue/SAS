@@ -8,11 +8,13 @@ import businesslogic.recipe.Recipe;
 import businesslogic.recipe.RecipeException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -27,9 +29,11 @@ public class RecipeContent {
     @FXML
     GridPane recipeview;
 
+    @FXML
+    BorderPane containerPane;
+
     ObservableList<Recipe> recipeListViewItems;
     ObservableList<Recipe> selectedRecipeListViewItems;
-    ObservableList<Recipe> inicRecipeListViewItems;
 
     @FXML
     ListView<Recipe> recipeListView;
@@ -42,16 +46,21 @@ public class RecipeContent {
     SummarySheet currentSheet;
 
     public void initialize(SummarySheet sheet){
+
         currentSheet = sheet;
         sheetLabel.setText(currentSheet.toString());
-        recipeListViewItems = CatERing.getInstance().getRecipeManager().getAllAvailableRecipes(currentSheet);
-        recipeListView.setItems(recipeListViewItems);
-        recipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        if (recipeListViewItems == null) {
+            recipeListViewItems = CatERing.getInstance().getRecipeManager().getAllAvailableRecipes(currentSheet);
+            recipeListView.setItems(recipeListViewItems);
+            recipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        }
 
-        inicRecipeListViewItems = CatERing.getInstance().getRecipeManager().getAllSelectedRecipes(currentSheet);
-        selectedRecipeListViewItems = FXCollections.observableArrayList(inicRecipeListViewItems);
-        selectedRecipeListView.setItems(inicRecipeListViewItems);
-        selectedRecipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        if (selectedRecipeListViewItems == null){
+            selectedRecipeListViewItems = CatERing.getInstance().getRecipeManager().getAllSelectedRecipes(currentSheet);
+            selectedRecipeListView.setItems(selectedRecipeListViewItems);
+            selectedRecipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        }
+
     }
 
     public void setKitchenTaskManagerController(KitchenTaskManager kitchenTaskManager) {
@@ -105,6 +114,10 @@ public class RecipeContent {
     @FXML
     public void fineButtonPressed(){
         mainPaneController.showList();
+    }
+
+    public void turniButtonPressed(){
+        mainPaneController.showShift(currentSheet);
     }
 
 }
