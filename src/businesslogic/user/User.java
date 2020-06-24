@@ -13,8 +13,9 @@ import java.util.Set;
 public class User {
 
 
+
     public static enum Role{SERVIZIO,CUOCO,CHEF,ORGANIZZATORE}
-    private int id;
+    protected int id;
     private String username;
     private Set<Role> roles;
     private String password;

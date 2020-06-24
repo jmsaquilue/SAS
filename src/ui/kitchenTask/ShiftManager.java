@@ -1,11 +1,9 @@
 package ui.kitchenTask;
 
 import businesslogic.CatERing;
-import businesslogic.kitchenTask.Foo;
-import businesslogic.kitchenTask.Shift;
+import businesslogic.kitchenTask.Slot;
 import businesslogic.kitchenTask.SummarySheet;
-import businesslogic.recipe.Recipe;
-import javafx.collections.FXCollections;
+import businesslogic.kitchenTask.Task;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -23,14 +21,15 @@ public class ShiftManager {
 
 
     @FXML
-    ListView<Foo> shiftBoard;
+    ListView<Slot> shiftBoard;
 
 
-    ObservableList<Foo> boardItems;
+    ObservableList<Slot> boardItems;
 
     SummarySheet currentSheet;
 
     KitchenTaskManager mainPaneController;
+
 
 
     public void initialize(SummarySheet sheet){

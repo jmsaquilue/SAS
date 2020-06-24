@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-06-2020 a las 08:59:05
+-- Tiempo de generación: 24-06-2020 a las 09:00:34
 -- Versión del servidor: 5.7.30-0ubuntu0.18.04.1
 -- Versión de PHP: 7.3.8
 
@@ -28,22 +28,26 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `CookShifts`
 --
 
-CREATE TABLE `CookShifts` (
+CREATE TABLE IF NOT EXISTS `CookShifts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `cook_id` int(11) NOT NULL,
-  `shift_id` int(11) NOT NULL
+  `shift_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `CookShifts_Shifts_id_fk` (`shift_id`),
+  KEY `CookShifts_Users_id_fk` (`cook_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `CookShifts`
 --
 
-INSERT INTO `CookShifts` (`cook_id`, `shift_id`) VALUES
-(4, 1),
-(6, 1),
-(4, 2),
-(5, 2),
-(5, 3),
-(5, 4);
+INSERT INTO `CookShifts` (`id`, `cook_id`, `shift_id`) VALUES
+(1, 4, 1),
+(2, 4, 2),
+(3, 5, 1),
+(4, 5, 4),
+(5, 6, 3),
+(6, 6, 2);
 
 -- --------------------------------------------------------
 
@@ -51,11 +55,13 @@ INSERT INTO `CookShifts` (`cook_id`, `shift_id`) VALUES
 -- Estructura de tabla para la tabla `Events`
 --
 
-CREATE TABLE `Events` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `date` date DEFAULT NULL,
-  `organized` int(11) NOT NULL
+  `organized` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Event_Users_id_fk` (`organized`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -72,10 +78,11 @@ INSERT INTO `Events` (`id`, `name`, `date`, `organized`) VALUES
 -- Estructura de tabla para la tabla `Recipes`
 --
 
-CREATE TABLE `Recipes` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Recipes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `description` varchar(1024) DEFAULT NULL
+  `description` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -93,9 +100,11 @@ INSERT INTO `Recipes` (`id`, `name`, `description`) VALUES
 -- Estructura de tabla para la tabla `Roles`
 --
 
-CREATE TABLE `Roles` (
+CREATE TABLE IF NOT EXISTS `Roles` (
   `id` char(1) NOT NULL,
-  `role` varchar(128) DEFAULT 'servizio'
+  `role` varchar(128) DEFAULT 'servizio',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Roles_id_uindex` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -114,11 +123,12 @@ INSERT INTO `Roles` (`id`, `role`) VALUES
 -- Estructura de tabla para la tabla `Shifts`
 --
 
-CREATE TABLE `Shifts` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Shifts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `start` int(11) NOT NULL,
   `end` int(11) NOT NULL,
-  `Day` date NOT NULL
+  `Day` date NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -138,10 +148,13 @@ INSERT INTO `Shifts` (`id`, `start`, `end`, `Day`) VALUES
 -- Estructura de tabla para la tabla `SummarySheets`
 --
 
-CREATE TABLE `SummarySheets` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `SummarySheets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `creator` int(11) DEFAULT NULL,
-  `event` int(11) DEFAULT NULL
+  `event` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `SummarySheet_Events_id_fk` (`event`),
+  KEY `SummarySheet_Users_id_fk` (`creator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -158,19 +171,21 @@ INSERT INTO `SummarySheets` (`id`, `creator`, `event`) VALUES
 -- Estructura de tabla para la tabla `TaskCookShifts`
 --
 
-CREATE TABLE `TaskCookShifts` (
+CREATE TABLE IF NOT EXISTS `TaskCookShifts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `task_id` int(11) NOT NULL,
   `cook_id` int(11) NOT NULL,
-  `shift_id` int(11) NOT NULL
+  `shift_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `TaskCookShifts_Tasks_id_fk` (`task_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `TaskCookShifts`
 --
 
-INSERT INTO `TaskCookShifts` (`task_id`, `cook_id`, `shift_id`) VALUES
-(2, 4, 1),
-(3, 5, 3);
+INSERT INTO `TaskCookShifts` (`id`, `task_id`, `cook_id`, `shift_id`) VALUES
+(2, 2, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -178,13 +193,16 @@ INSERT INTO `TaskCookShifts` (`task_id`, `cook_id`, `shift_id`) VALUES
 -- Estructura de tabla para la tabla `Tasks`
 --
 
-CREATE TABLE `Tasks` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeEstimate` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT '1',
   `complete` tinyint(1) NOT NULL DEFAULT '0',
   `recipeid` int(11) DEFAULT NULL,
-  `summaryid` int(11) DEFAULT NULL
+  `summaryid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Task_Recipe_id_fk` (`recipeid`),
+  KEY `Task_SummarySheets_id_fk` (`summaryid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -201,9 +219,11 @@ INSERT INTO `Tasks` (`id`, `timeEstimate`, `quantity`, `complete`, `recipeid`, `
 -- Estructura de tabla para la tabla `UserRoles`
 --
 
-CREATE TABLE `UserRoles` (
+CREATE TABLE IF NOT EXISTS `UserRoles` (
   `user_id` int(11) NOT NULL,
-  `role_id` char(1) NOT NULL
+  `role_id` char(1) NOT NULL,
+  KEY `UserRoles_Roles_id_fk` (`role_id`),
+  KEY `UserRoles_Users_id_fk` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -230,15 +250,16 @@ INSERT INTO `UserRoles` (`user_id`, `role_id`) VALUES
 -- Estructura de tabla para la tabla `Users`
 --
 
-CREATE TABLE `Users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) NOT NULL DEFAULT '',
   `pass` varchar(128) NOT NULL,
   `name` varchar(60) DEFAULT NULL,
   `surname` varchar(120) DEFAULT NULL,
   `gender` varchar(20) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
-  `email` varchar(128) DEFAULT NULL
+  `email` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -256,119 +277,6 @@ INSERT INTO `Users` (`id`, `username`, `pass`, `name`, `surname`, `gender`, `age
 (8, 'Silvia', 'Silvia', NULL, NULL, NULL, NULL, NULL),
 (9, 'Marco', 'Marco', NULL, NULL, NULL, NULL, NULL),
 (10, 'Piergiorgio', 'Piergiorgio', NULL, NULL, NULL, NULL, NULL);
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `CookShifts`
---
-ALTER TABLE `CookShifts`
-  ADD PRIMARY KEY (`cook_id`,`shift_id`),
-  ADD KEY `CookShifts_Shifts_id_fk` (`shift_id`);
-
---
--- Indices de la tabla `Events`
---
-ALTER TABLE `Events`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Event_Users_id_fk` (`organized`);
-
---
--- Indices de la tabla `Recipes`
---
-ALTER TABLE `Recipes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `Roles`
---
-ALTER TABLE `Roles`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Roles_id_uindex` (`id`);
-
---
--- Indices de la tabla `Shifts`
---
-ALTER TABLE `Shifts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `SummarySheets`
---
-ALTER TABLE `SummarySheets`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `SummarySheet_Events_id_fk` (`event`),
-  ADD KEY `SummarySheet_Users_id_fk` (`creator`);
-
---
--- Indices de la tabla `TaskCookShifts`
---
-ALTER TABLE `TaskCookShifts`
-  ADD PRIMARY KEY (`task_id`,`cook_id`,`shift_id`),
-  ADD KEY `TaskShifts_CookShifts_id_fk` (`cook_id`,`shift_id`);
-
---
--- Indices de la tabla `Tasks`
---
-ALTER TABLE `Tasks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Task_Recipe_id_fk` (`recipeid`),
-  ADD KEY `Task_SummarySheets_id_fk` (`summaryid`);
-
---
--- Indices de la tabla `UserRoles`
---
-ALTER TABLE `UserRoles`
-  ADD KEY `UserRoles_Roles_id_fk` (`role_id`),
-  ADD KEY `UserRoles_Users_id_fk` (`user_id`);
-
---
--- Indices de la tabla `Users`
---
-ALTER TABLE `Users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `Events`
---
-ALTER TABLE `Events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `Recipes`
---
-ALTER TABLE `Recipes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `Shifts`
---
-ALTER TABLE `Shifts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `SummarySheets`
---
-ALTER TABLE `SummarySheets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de la tabla `Tasks`
---
-ALTER TABLE `Tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `Users`
---
-ALTER TABLE `Users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas
@@ -398,8 +306,7 @@ ALTER TABLE `SummarySheets`
 -- Filtros para la tabla `TaskCookShifts`
 --
 ALTER TABLE `TaskCookShifts`
-  ADD CONSTRAINT `TaskShifts_CookShifts_id_fk` FOREIGN KEY (`cook_id`,`shift_id`) REFERENCES `CookShifts` (`cook_id`, `shift_id`),
-  ADD CONSTRAINT `TaskShifts_Tasks_id_fk` FOREIGN KEY (`task_id`) REFERENCES `Tasks` (`id`);
+  ADD CONSTRAINT `TaskCookShifts_Tasks_id_fk` FOREIGN KEY (`task_id`) REFERENCES `Tasks` (`id`);
 
 --
 -- Filtros para la tabla `Tasks`

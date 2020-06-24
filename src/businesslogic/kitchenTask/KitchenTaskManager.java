@@ -65,7 +65,6 @@ public class KitchenTaskManager {
     public Task addRecipe(Recipe r) throws UseCaseLogicException, SummarySheetException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
-
         if(!user.isChef()){
             throw new UseCaseLogicException();
         }
@@ -78,9 +77,28 @@ public class KitchenTaskManager {
     }
 
 
-    public ObservableList<Foo> getShifts(){
+    public ObservableList<Slot> getShifts(){
         return ShiftBoard.loadAllShift();
     }
+
+    public Task assignTask(Task t, Slot slot) throws UseCaseLogicException, SummarySheetException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if(!user.isChef()){
+            throw new UseCaseLogicException();
+        }
+
+        if (selectedSheet==null && selectedSheet.inList(t) && (slot.getC()).availableShift(slot.getS())){
+            throw new SummarySheetException();
+        }
+
+        slot.setTask(t);
+        slot.disavailable();
+
+        this.notifyTaskAssigned(t,slot);
+
+        return t;
+    }
+
 
     private void notifySheetAdded(SummarySheet s) {
         for (TaskEventReceiver er: this.eventReceivers){
@@ -91,6 +109,12 @@ public class KitchenTaskManager {
     private void notifyRecipeAdded(Task t) {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateRecipeAdded(t);
+        }
+    }
+
+    private void notifyTaskAssigned(Task t, Slot slot) {
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateTaskAssigned(t,slot);
         }
     }
 

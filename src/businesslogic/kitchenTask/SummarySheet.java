@@ -116,10 +116,19 @@ public class SummarySheet {
     public Event getEvent(){ return event;}
 
     public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
-        Task t= new Task(r, this.getId());
+        Task t = new Task(r, this.getId());
         t.saveTask(t);
         list.add(t);
         return t;
     }
 
+    public Boolean inList(Task t){
+        Boolean b = false;
+        for (Task tt: list){
+            if (t.getId() == tt.getId()){
+                b = true;
+            }
+        }
+        return b;
+    }
 }

@@ -30,4 +30,6 @@ public class Shift {
     public Integer getId() {
         return id;
     }
+
+
 }
