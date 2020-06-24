@@ -1,11 +1,6 @@
 package businesslogic.kitchenTask;
 
 import businesslogic.user.Cook;
-import persistence.PersistenceManager;
-import persistence.ResultHandler;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Slot {
     private int id;
@@ -26,7 +21,24 @@ public class Slot {
         this.t = t;
         this.available = b;
     }
-
+    public String toString(){
+        String r="";
+        if(s!=null){
+            r= r + "Shift: " + s.toString();
+        }
+        if(t!=null){
+            r= r + "Task: " + t.toString();
+        }
+        if(c!=null){
+            r=r + "Cook:" + c.toString() + ".\n";
+        }
+        if(available){
+            r= r + "Disponible";
+        }else {
+            r= r + "No Disponible";
+        }
+        return r;
+    }
 
     public Task getT(){
         return t;

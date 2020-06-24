@@ -28,4 +28,8 @@ public class Cook extends User{
 
         return available[0];
     }
+
+    public String toString(){
+        return getUserName();
+    }
 }

@@ -1,16 +1,5 @@
 package businesslogic.kitchenTask;
 
-import businesslogic.event.Event;
-import businesslogic.user.Cook;
-import businesslogic.user.User;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import persistence.PersistenceManager;
-import persistence.ResultHandler;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Shift {
@@ -21,12 +10,19 @@ public class Shift {
     //private Boolean available;
     //private Cook cook;
     //private Task task;
-
-    public Shift(int id,int start,int end,Date day){
+    public Shift(){
 
     }
+    public Shift(int id,int start,int end,Date day){
+        this.id=id;
+        this.start=start;
+        this.end=end;
+        this.day=day;
+    }
 
-
+    public String toString(){
+        return "Start: " + start + ", End: "+ end + ", Day: " + day+ ".\n";
+    }
     public Integer getId() {
         return id;
     }

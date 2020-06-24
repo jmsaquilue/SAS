@@ -7,7 +7,6 @@ import persistence.PersistenceManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Task {
     private int id;
@@ -19,6 +18,22 @@ public class Task {
 
     public Task(){
 
+    }
+
+    @Override
+    public String toString() {
+        String r= "";
+        r=" Time Estimate=" + timeEstimate +
+                ", quantity=" + quantity;
+        if(complete){
+            r= r + " Completado ";
+        }else {
+            r= r + " No completado ";
+        }
+        if(isPrepared != null){
+            r = r + " Receta: " + isPrepared.toString();
+        }
+        return r + ". \n";
     }
 
     public Task(Recipe r, int id){

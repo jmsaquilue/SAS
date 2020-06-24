@@ -117,7 +117,7 @@ public class SummarySheet {
 
     public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
         Task t = new Task(r, this.getId());
-        t.saveTask(t);
+        //t.saveTask(t);
         list.add(t);
         return t;
     }

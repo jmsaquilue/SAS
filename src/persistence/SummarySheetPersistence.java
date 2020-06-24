@@ -1,7 +1,6 @@
 package persistence;
 
 import businesslogic.kitchenTask.*;
-import ui.kitchenTask.ShiftManager;
 
 public class SummarySheetPersistence implements TaskEventReceiver {
 
@@ -13,7 +12,7 @@ public class SummarySheetPersistence implements TaskEventReceiver {
 
     @Override
     public void updateRecipeAdded(Task t){
-        //TODO:
+        Task.saveTask(t);
     }
 
     @Override
