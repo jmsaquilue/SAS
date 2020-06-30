@@ -20,18 +20,20 @@ public class SummarySheet {
     private int id;
     private User creator;
     private Event event; // Otro cambio de nombre
-    private ArrayList<Task> list;
+    private static Map<Integer, Task> list = FXCollections.observableHashMap();
+
+    //private ArrayList<Task> list;
     private static Map<Integer, SummarySheet> loadedSheets = FXCollections.observableHashMap();
 
 
     public SummarySheet(Event event,User user) {
         this.event = event;
         this.creator = user;
-        this.list = new ArrayList<>();
+
     }
 
     public SummarySheet() {
-        this.list = new ArrayList<>();
+
     }
 
     public boolean isCreator(User user) {
@@ -47,7 +49,7 @@ public class SummarySheet {
         result += "\n";
         if (this.list.size() > 0){
             result += "Compiti: \n";
-            for (Task t: this.list){
+            for (Task t: this.list.values()){
                 result += t.toString();
                 result +="\n";
             }
@@ -115,20 +117,55 @@ public class SummarySheet {
 
     public Event getEvent(){ return event;}
 
+    public ArrayList<Task> getList() {
+        String query = "SELECT * FROM Tasks WHERE summaryid='"+id+"';";
+        ArrayList<Task> newTask = new ArrayList<>();
+        ArrayList<Task> oldTask = new ArrayList<>();
+
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                int idT = rs.getInt("id");
+                if (list.containsKey(idT)) {
+                    Task t = list.get(idT);
+                    oldTask.add(t);
+                } else {
+
+                    int timeEstimate = rs.getInt("timeEstimate");
+                    int quantity = rs.getInt("quantity");
+                    boolean complete = rs.getBoolean("complete");
+                    int recipeId = rs.getInt("recipeid");
+                    Recipe r = businesslogic.recipe.Recipe.loadRecipeById(recipeId);
+                    Task t = new Task(idT,timeEstimate,quantity,complete,id,r);
+                    newTask.add(t);
+                }
+            }
+        });
+
+        for (Task t: newTask){
+            oldTask.add(t);
+            list.put(t.getId(), t);
+        }
+
+        return oldTask;
+    }
+
     public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
         Task t = new Task(r, this.getId());
         //t.saveTask(t);
-        list.add(t);
+        list.put(t.getId(),t);
         return t;
     }
 
     public Boolean inList(Task t){
         Boolean b = false;
-        for (Task tt: list){
+        for (Task tt: list.values()){
             if (t.getId() == tt.getId()){
                 b = true;
             }
         }
         return b;
     }
+
+
 }

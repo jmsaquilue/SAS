@@ -81,23 +81,36 @@ public class KitchenTaskManager {
         return ShiftBoard.loadAllShift();
     }
 
-    public Task assignTask(Task t, Slot slot) throws UseCaseLogicException, SummarySheetException {
-        User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if(!user.isChef()){
-            throw new UseCaseLogicException();
-        }
-
-        if (selectedSheet==null && selectedSheet.inList(t) && (slot.getC()).availableShift(slot.getS())){
-            throw new SummarySheetException();
-        }
-
-        slot.setTask(t);
-        slot.disavailable();
-
-        this.notifyTaskAssigned(t,slot);
-
-        return t;
+    public ArrayList<Task> getAvailableTask() {
+        return selectedSheet.getList();
     }
+
+    public Slot assignTask(Task t, Slot slot) throws UseCaseLogicException, SummarySheetException {
+            User user = CatERing.getInstance().getUserManager().getCurrentUser();
+            if (!user.isChef()) {
+                throw new UseCaseLogicException();
+            }
+
+            if (selectedSheet == null && selectedSheet.inList(t) && (slot.getC()).availableShift(slot.getS())) {
+                throw new SummarySheetException();
+            }
+
+            slot.setTask(t);
+            slot.disavailable();
+
+            this.notifyTaskAssigned(slot);
+
+        return slot;
+    }
+
+    public ArrayList<Slot> assignTask(Task t, ArrayList<Slot> slots) throws UseCaseLogicException, SummarySheetException {
+        ArrayList<Slot> changes = new ArrayList<>();
+        for (Slot s: slots){
+            changes.add(assignTask(t,s));
+        }
+        return changes;
+    }
+
 
 
     private void notifySheetAdded(SummarySheet s) {
@@ -112,9 +125,9 @@ public class KitchenTaskManager {
         }
     }
 
-    private void notifyTaskAssigned(Task t, Slot slot) {
+    private void notifyTaskAssigned(Slot slot) {
         for (TaskEventReceiver er: this.eventReceivers){
-            er.updateTaskAssigned(t,slot);
+            er.updateTaskAssigned(slot);
         }
     }
 
@@ -129,4 +142,6 @@ public class KitchenTaskManager {
     public void removeEventReceiver(TaskEventReceiver rec) {
         this.eventReceivers.remove(rec);
     }
+
+
 }

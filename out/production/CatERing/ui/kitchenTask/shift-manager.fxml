@@ -8,9 +8,13 @@
 
 <BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.ShiftManager">
    <bottom>
-      <FlowPane alignment="TOP_CENTER" prefHeight="63.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <FlowPane alignment="TOP_CENTER" hgap="10.0" prefHeight="63.0" prefWidth="600.0" vgap="4.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="assegniButton" mnemonicParsing="false" onAction="#assegniButtonPressed" text="Assegni compito" />
+            <Button mnemonicParsing="false" text="Info" />
+            <Button mnemonicParsing="false" text="Editare" />
+            <Button mnemonicParsing="false" text="Cancelli compito" />
+            <Button mnemonicParsing="false" onAction="#fineButtonPressed" text="Fine" />
          </children>
       </FlowPane>
    </bottom>

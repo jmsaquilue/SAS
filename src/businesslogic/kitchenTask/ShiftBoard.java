@@ -4,9 +4,11 @@ import businesslogic.recipe.Recipe;
 import businesslogic.user.Cook;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
 import persistence.ResultHandler;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -186,8 +188,21 @@ public class ShiftBoard {
     }
 
 
-    public static void saveChoose(Task t, Slot slot) {
-        //TODO.
+    public static void saveChoose(Slot slot) {
+        String querry = "INSERT INTO catering.TaskCookShifts(task_id, cook_id, shift_id) VALUES (?, ?, ?);";
+        int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, slot.getT().getId());
+                ps.setInt(2, slot.getC().getId());
+                ps.setInt(3,slot.getS().getId());
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                //fa niente
+            }
+        });
     }
 
 }

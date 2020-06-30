@@ -52,6 +52,8 @@ public class Slot {
         return s;
     }
 
+    public Boolean getAvailable() {return available;}
+
     public void disavailable() {
         available = false;
     }

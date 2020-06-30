@@ -16,8 +16,8 @@ public class SummarySheetPersistence implements TaskEventReceiver {
     }
 
     @Override
-    public void updateTaskAssigned(Task t, Slot slot){
-        ShiftBoard.saveChoose(t,slot);
+    public void updateTaskAssigned(Slot slot){
+        ShiftBoard.saveChoose(slot);
 
     }
 }

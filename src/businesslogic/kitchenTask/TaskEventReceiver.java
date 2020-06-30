@@ -5,5 +5,6 @@ public interface TaskEventReceiver {
 
     public void updateRecipeAdded(Task t);
 
-    public void updateTaskAssigned(Task t, Slot slot);
+    public void updateTaskAssigned(Slot slot);
+
 }

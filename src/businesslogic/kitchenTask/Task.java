@@ -1,12 +1,16 @@
 package businesslogic.kitchenTask;
 
 import businesslogic.recipe.Recipe;
+import javafx.collections.FXCollections;
 import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
+import persistence.ResultHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Task {
     private int id;
@@ -16,9 +20,15 @@ public class Task {
     private int idSummary;
     private Recipe isPrepared; //No me gusta mucho el nombre
 
+
+
+
+
     public Task(){
 
     }
+
+
 
     @Override
     public String toString() {
@@ -95,4 +105,5 @@ public class Task {
             }
         });
     }
+
 }
