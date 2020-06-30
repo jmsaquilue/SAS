@@ -111,7 +111,33 @@ public class KitchenTaskManager {
         return changes;
     }
 
+    public Slot setQuantityTask(Slot s, int q)throws UseCaseLogicException, SummarySheetException{
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (!user.isChef()) {
+            throw new UseCaseLogicException();
+        }
 
+        if (selectedSheet == null && selectedSheet.inList(s.getT())) {
+            throw new SummarySheetException();
+        }
+        s.getT().setQuantity(q);
+        this.notifyTaskQuantityChange(s.getT());
+        return s;
+    }
+
+    public Slot setTimeTask(Slot s, int t)throws UseCaseLogicException, SummarySheetException{
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (!user.isChef()) {
+            throw new UseCaseLogicException();
+        }
+
+        if (selectedSheet == null && selectedSheet.inList(s.getT())) {
+            throw new SummarySheetException();
+        }
+        s.getT().setTimeEstimate(t);
+        this.notifyTaskTimeChange(s.getT());
+        return s;
+    }
 
     private void notifySheetAdded(SummarySheet s) {
         for (TaskEventReceiver er: this.eventReceivers){
@@ -131,6 +157,17 @@ public class KitchenTaskManager {
         }
     }
 
+    private void notifyTaskQuantityChange(Task t){
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateTaskQuantity(t);
+        }
+    }
+
+    private void notifyTaskTimeChange(Task t){
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateTaskTime(t);
+        }
+    }
     public ObservableList<SummarySheet> getAllSummarySheets() {
         return SummarySheet.loadAllSummarySheets();
     }

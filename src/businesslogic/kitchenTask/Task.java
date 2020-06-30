@@ -1,16 +1,12 @@
 package businesslogic.kitchenTask;
 
 import businesslogic.recipe.Recipe;
-import javafx.collections.FXCollections;
 import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
-import persistence.ResultHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class Task {
     private int id;
@@ -27,7 +23,6 @@ public class Task {
     public Task(){
 
     }
-
 
 
     @Override
@@ -84,6 +79,9 @@ public class Task {
         return idSummary;
     }
 
+    public void setQuantity(int q){quantity=q;}
+    public void setTimeEstimate(int t){timeEstimate=t;}
+
     public static void saveTask(Task t){
         String querry = "INSERT INTO catering.Tasks (timeEstimate, quantity, complete, recipeid, summaryid) VALUES (?, ?, ?, ?, ?);";
         int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
@@ -105,5 +103,36 @@ public class Task {
             }
         });
     }
+
+
+
+    public static void saveQuantity(Task t) {
+        String querry = "UPDATE Tasks SET quantity="+t.getQuantity()+" WHERE id=" +t.getId()+";";
+        int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                //fa niente
+            }
+        });
+    }
+
+    public static void saveTime(Task t) {
+        String querry = "UPDATE Tasks SET timeEstimate="+t.getTimeEstimate()+" WHERE id=" +t.getId()+";";
+        int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                //fa niente
+            }
+        });
+    }
+
 
 }

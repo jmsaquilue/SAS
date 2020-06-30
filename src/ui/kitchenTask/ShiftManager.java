@@ -2,14 +2,10 @@ package ui.kitchenTask;
 
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
-import businesslogic.event.Event;
 import businesslogic.kitchenTask.Slot;
 import businesslogic.kitchenTask.SummarySheet;
 import businesslogic.kitchenTask.SummarySheetException;
 import businesslogic.kitchenTask.Task;
-import businesslogic.user.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -30,6 +26,10 @@ public class ShiftManager {
     @FXML
     Button assegniButton;
 
+    @FXML
+    Button quantity;
+    @FXML
+    Button time;
 
     @FXML
     ListView<Slot> shiftBoard;
@@ -57,9 +57,19 @@ public class ShiftManager {
 
             shiftBoard.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Slot> c) -> {
                 assegniButton.setDisable(false);
-                for(Slot s : new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems())){
+                quantity.setDisable(true);
+                time.setDisable(true);
+                ArrayList<Slot> slist=new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+                for(Slot s : slist){
                     if (!s.getAvailable()) {
                         assegniButton.setDisable(true);
+                        break;
+                    }
+                }
+                for(Slot s : new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems())){
+                    if (!s.getAvailable() && slist.size()==1) {
+                        quantity.setDisable(false);
+                        time.setDisable(false);
                         break;
                     }
                 }
@@ -126,6 +136,46 @@ public class ShiftManager {
             alert.setTitle("Error");
             alert.setHeaderText("Non rimane nenssun compito da assegnare.");
             alert.showAndWait();
+        }
+    }
+
+    @FXML
+    public void editButtonQuantity(){
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Imposta Quantità");
+        dialog.setContentText("Inserici una quantità:");
+
+// Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            try {
+                ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+                ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
+                int i = Integer.parseInt(result.get());
+                Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setQuantityTask(old.get(0), i);
+                total.add(newSlot);
+            }catch (UseCaseLogicException | SummarySheetException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    public void editButtonTime(){
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Imposta Time");
+        dialog.setContentText("Inserici una quantità(minuti):");
+
+// Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            try {
+                ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+                ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
+                int i = Integer.parseInt(result.get());
+                Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setTimeTask(old.get(0), i);
+                total.add(newSlot);
+            }catch (UseCaseLogicException | SummarySheetException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
