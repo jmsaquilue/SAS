@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 public class ShiftManager {
@@ -25,6 +26,9 @@ public class ShiftManager {
 
     @FXML
     Button assegniButton;
+
+    @FXML
+    Button cancelliButton;
 
     @FXML
     Button quantity;
@@ -52,24 +56,21 @@ public class ShiftManager {
             System.out.println(boardItems);
             shiftBoard.setItems(boardItems);
             shiftBoard.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+            assegniButton.setDisable(true);
+            quantity.setDisable(true);
+            time.setDisable(true);
+            cancelliButton.setDisable(true);
             //TODO: si has seleccionado uno ocupado, no te deja asignar compito
 
             shiftBoard.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Slot> c) -> {
-                assegniButton.setDisable(false);
-                quantity.setDisable(true);
-                time.setDisable(true);
                 ArrayList<Slot> slist=new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+                assegniButton.setDisable(slist.size() == 0);
+                quantity.setDisable(slist.size() != 1 || slist.get(0).getAvailable());
+                time.setDisable(slist.size() != 1 || slist.get(0).getAvailable());
+                cancelliButton.setDisable(slist.size()!=1 || slist.get(0).getAvailable());
                 for(Slot s : slist){
                     if (!s.getAvailable()) {
                         assegniButton.setDisable(true);
-                        break;
-                    }
-                }
-                for(Slot s : new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems())){
-                    if (!s.getAvailable() && slist.size()==1) {
-                        quantity.setDisable(false);
-                        time.setDisable(false);
                         break;
                     }
                 }
@@ -123,6 +124,7 @@ public class ShiftManager {
                         Slot newSlot = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get(),old.get(0));
                         total.add(newSlot);
                     }
+                    Collections.sort(total);
                     boardItems = FXCollections.observableArrayList(total);
                     shiftBoard.setItems(boardItems);
 
@@ -154,6 +156,9 @@ public class ShiftManager {
                 int i = Integer.parseInt(result.get());
                 Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setQuantityTask(old.get(0), i);
                 total.add(newSlot);
+                Collections.sort(total);
+                boardItems = FXCollections.observableArrayList(total);
+                shiftBoard.setItems(boardItems);
             }catch (UseCaseLogicException | SummarySheetException ex) {
                 ex.printStackTrace();
             }
@@ -173,6 +178,9 @@ public class ShiftManager {
                 int i = Integer.parseInt(result.get());
                 Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setTimeTask(old.get(0), i);
                 total.add(newSlot);
+                Collections.sort(total);
+                boardItems = FXCollections.observableArrayList(total);
+                shiftBoard.setItems(boardItems);
             }catch (UseCaseLogicException | SummarySheetException ex) {
                 ex.printStackTrace();
             }
@@ -183,6 +191,31 @@ public class ShiftManager {
     @FXML
     public void fineButtonPressed(){
         mainPaneController.openSheet(currentSheet);
+    }
+
+    public void cancelliButtonPressed(){
+        ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+        if (old.size() == 1){
+            try {
+                ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
+                Slot newSlot = CatERing.getInstance().getKitchenTaskManager().dischargeTask(old.get(0));
+                total.removeAll(old);
+                total.add(newSlot);
+                boardItems = FXCollections.observableArrayList(total);
+                shiftBoard.setItems(boardItems);
+                Collections.sort(total);
+                boardItems = FXCollections.observableArrayList(total);
+                shiftBoard.setItems(boardItems);
+            }catch (UseCaseLogicException | SummarySheetException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Non rimane nenssun compito da assegnare.");
+            alert.showAndWait();
+        }
     }
 
 }

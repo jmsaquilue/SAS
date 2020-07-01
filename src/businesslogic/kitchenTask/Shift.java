@@ -26,6 +26,8 @@ public class Shift {
     public Integer getId() {
         return id;
     }
+    public Date getDay() {return day;}
+    public int getStart() {return start;}
 
 
 }

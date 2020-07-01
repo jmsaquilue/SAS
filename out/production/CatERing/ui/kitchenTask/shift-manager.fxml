@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.ShiftManager">
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.ShiftManager">
    <bottom>
       <FlowPane alignment="TOP_CENTER" hgap="10.0" prefHeight="63.0" prefWidth="600.0" vgap="4.0" BorderPane.alignment="CENTER">
          <children>
@@ -11,7 +16,7 @@
             <Button mnemonicParsing="false" text="Info" />
             <Button fx:id="quantity" mnemonicParsing="false" onAction="#editButtonQuantity" text="Editare Quantità" />
             <Button fx:id="time" mnemonicParsing="false" onAction="#editButtonTime" text="Editare Tempo" />
-            <Button mnemonicParsing="false" text="Cancelli compito" />
+            <Button fx:id="cancelliButton" mnemonicParsing="false" onAction="#cancelliButtonPressed" text="Cancelli compito" />
             <Button mnemonicParsing="false" onAction="#fineButtonPressed" text="Fine" />
          </children>
       </FlowPane>
@@ -22,7 +27,13 @@
             <ListView fx:id="shiftBoard" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>
          <top>
-            <FlowPane alignment="TOP_CENTER" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+            <FlowPane alignment="TOP_CENTER" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <children>
+                  <DatePicker promptText="Data Inizio" />
+                  <DatePicker promptText="Data fine" />
+                  <RadioButton mnemonicParsing="false" text="Completi" />
+                  <RadioButton mnemonicParsing="false" text="Disponibili" />
+               </children></FlowPane>
          </top>
       </BorderPane>
    </center>

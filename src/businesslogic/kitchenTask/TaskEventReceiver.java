@@ -10,4 +10,5 @@ public interface TaskEventReceiver {
     public void updateTaskQuantity(Task t);
     public void updateTaskTime(Task t);
 
+    public void updateTaskdischarged(Slot slot);
 }

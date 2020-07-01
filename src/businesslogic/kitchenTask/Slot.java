@@ -2,7 +2,7 @@ package businesslogic.kitchenTask;
 
 import businesslogic.user.Cook;
 
-public class Slot {
+public class Slot implements Comparable<Slot>{
     private int id;
     private Shift s;
     private Task t;
@@ -40,6 +40,18 @@ public class Slot {
         return r;
     }
 
+    @Override
+    public int compareTo(Slot slot1)
+    {
+        if (slot1.getS().getDay() == s.getDay()){
+            return Integer.compare(s.getStart(),slot1.getS().getStart());
+        }
+        else {
+            return s.getDay().compareTo(slot1.getS().getDay());
+        }
+    }
+
+
     public Task getT(){
         return t;
     }
@@ -60,6 +72,14 @@ public class Slot {
 
     public void setTask(Task t) {
         this.t = t;
+    }
+
+    public void removeTask() {
+        this.t = null;
+    }
+
+    public void setFree() {
+        this.available = true;
     }
 
     /*
