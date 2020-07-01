@@ -149,11 +149,11 @@ public class ShiftManager {
 
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
+        int i = Integer.parseInt(result.get());
+        if (result.isPresent() && i>0){
             try {
                 ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
                 ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
-                int i = Integer.parseInt(result.get());
                 Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setQuantityTask(old.get(0), i);
                 total.add(newSlot);
                 Collections.sort(total);
@@ -171,11 +171,11 @@ public class ShiftManager {
 
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
+        int i = Integer.parseInt(result.get());
+        if (result.isPresent() && i>0){
             try {
                 ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
                 ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
-                int i = Integer.parseInt(result.get());
                 Slot newSlot=CatERing.getInstance().getKitchenTaskManager().setTimeTask(old.get(0), i);
                 total.add(newSlot);
                 Collections.sort(total);

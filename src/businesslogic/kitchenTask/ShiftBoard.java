@@ -29,7 +29,8 @@ public class ShiftBoard {
         return FXCollections.observableArrayList(Sorted.values());
     }
 
-    public static ObservableList<Slot> loadAllShift() {
+    public static ObservableList<Slot> loadAllShift(SummarySheet s) {
+        int n=s.getId();
         String query = "SELECT * FROM CookShifts;";
 
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -67,9 +68,10 @@ public class ShiftBoard {
                                     int age = rs.getInt("age");
                                     String email = rs.getString("email");
                                     Cook c = new Cook(id2,username,password,name,surname,gender,age,email);
+                                    System.out.println(n);
 
                                     String query4 = "SELECT COUNT(*) FROM Tasks WHERE id in (SELECT task_id FROM TaskCookShifts WHERE shift_id='"+
-                                            shift_id + "' and cook_id='"+cook_id+"');";
+                                            shift_id + "' and cook_id='"+cook_id+"') and summaryid="+n;
                                     PersistenceManager.executeQuery(query4, new ResultHandler() {
                                         @Override
                                         public void handle(ResultSet rs) throws SQLException {
@@ -77,7 +79,7 @@ public class ShiftBoard {
                                             if (count > 0){
 
                                                 String query5 = "SELECT * FROM Tasks WHERE id in (SELECT task_id FROM TaskCookShifts WHERE shift_id='"+
-                                                        shift_id + "' and cook_id='"+cook_id+"');";
+                                                        shift_id + "' and cook_id='"+cook_id+"') and summaryid="+n;
                                                 PersistenceManager.executeQuery(query5, new ResultHandler() {
                                                     @Override
                                                     public void handle(ResultSet rs) throws SQLException {
@@ -88,6 +90,7 @@ public class ShiftBoard {
                                                         int idSummary = rs.getInt("summaryid");
                                                         int recipeid = rs.getInt("recipeid");
                                                         Recipe r = Recipe.loadRecipeById(recipeid);
+
 
                                                         Task t = new Task(id3,timeEstimate,quantity,complete,idSummary,r);
                                                         Slot slot = new Slot(id,s,c,t,false);

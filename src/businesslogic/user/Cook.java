@@ -16,7 +16,7 @@ public class Cook extends User{
 
 
     public Boolean availableShift(Shift s) {
-        String querry = "SELECT COUNT(*) FROM COOKSHIFTS WHERE shift_id='"+s.getId()+"' and cook_id='"+this.id+"';";
+        String querry = "SELECT COUNT(*) FROM CookShifts WHERE shift_id='"+s.getId()+"' and cook_id='"+this.id+"';";
         final Boolean[] available = {false};
         PersistenceManager.executeQuery(querry, new ResultHandler() {
             @Override

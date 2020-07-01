@@ -80,7 +80,7 @@ public class KitchenTaskManager {
 
 
     public ObservableList<Slot> getShifts(){
-        return ShiftBoard.loadAllShift();
+        return ShiftBoard.loadAllShift(selectedSheet);
     }
 
     public ArrayList<Task> getAvailableTask() {
