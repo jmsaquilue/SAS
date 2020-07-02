@@ -47,11 +47,11 @@ public class ShiftManager {
 
 
 
-    public void initialize(SummarySheet sheet){
+    public void initialize(SummarySheet sheet, Boolean b){
         currentSheet = sheet;
         sheetLabel.setText(currentSheet.toString());
-
-        if (boardItems == null){
+        System.out.println(b);
+        if (boardItems == null|| b){
             boardItems = CatERing.getInstance().getKitchenTaskManager().getShifts();
             System.out.println(boardItems);
             shiftBoard.setItems(boardItems);

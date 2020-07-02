@@ -31,6 +31,7 @@ public class ShiftBoard {
 
     public static ObservableList<Slot> loadAllShift(SummarySheet s) {
         int n=s.getId();
+        list.clear();
         String query = "SELECT * FROM CookShifts;";
 
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -68,7 +69,6 @@ public class ShiftBoard {
                                     int age = rs.getInt("age");
                                     String email = rs.getString("email");
                                     Cook c = new Cook(id2,username,password,name,surname,gender,age,email);
-                                    System.out.println(n);
 
                                     String query4 = "SELECT COUNT(*) FROM Tasks WHERE id in (SELECT task_id FROM TaskCookShifts WHERE shift_id='"+
                                             shift_id + "' and cook_id='"+cook_id+"') and summaryid="+n;

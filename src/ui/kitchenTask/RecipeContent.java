@@ -5,21 +5,13 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.kitchenTask.SummarySheet;
 import businesslogic.kitchenTask.SummarySheetException;
 import businesslogic.recipe.Recipe;
-import businesslogic.recipe.RecipeException;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class RecipeContent {
@@ -45,20 +37,25 @@ public class RecipeContent {
     KitchenTaskManager mainPaneController;
     SummarySheet currentSheet;
 
+    Boolean sheetchangeshift;
+    Boolean sheetchange;
+
+
     public void initialize(SummarySheet sheet){
 
         currentSheet = sheet;
         sheetLabel.setText(currentSheet.toString());
-        if (recipeListViewItems == null) {
+        if (recipeListViewItems == null || sheetchange) {
             recipeListViewItems = CatERing.getInstance().getRecipeManager().getAllAvailableRecipes(currentSheet);
             recipeListView.setItems(recipeListViewItems);
             recipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         }
 
-        if (selectedRecipeListViewItems == null){
+        if (selectedRecipeListViewItems == null || sheetchange){
             selectedRecipeListViewItems = CatERing.getInstance().getRecipeManager().getAllSelectedRecipes(currentSheet);
             selectedRecipeListView.setItems(selectedRecipeListViewItems);
             selectedRecipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            sheetchange=false;
         }
 
     }
@@ -114,10 +111,13 @@ public class RecipeContent {
     @FXML
     public void fineButtonPressed(){
         mainPaneController.showList();
+        sheetchange=true;
+        sheetchangeshift=true;
     }
 
     public void turniButtonPressed(){
-        mainPaneController.showShift(currentSheet);
+        mainPaneController.showShift(currentSheet, sheetchangeshift);
+        sheetchangeshift=false;
     }
 
 }

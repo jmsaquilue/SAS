@@ -39,6 +39,8 @@ public class KitchenTaskManager {
     ShiftManager shiftPaneController;
 
 
+
+
     public void initialize(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("recipe-manager.fxml"));
         try {
@@ -63,7 +65,6 @@ public class KitchenTaskManager {
             String userName = CatERing.getInstance().getUserManager().getCurrentUser().getUserName();
             userLabel.setText(userName);
         }
-
         sheetListPaneController.setParent(this);
 
 
@@ -90,8 +91,8 @@ public class KitchenTaskManager {
         containerPane.setCenter(sheetListPane);
     }
 
-    public void showShift(SummarySheet sheet) {
-        shiftPaneController.initialize(sheet);
+    public void showShift(SummarySheet sheet, Boolean change) {
+        shiftPaneController.initialize(sheet, change);
         containerPane.setCenter(shiftPane);
     }
 
