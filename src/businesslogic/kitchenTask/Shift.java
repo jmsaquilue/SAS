@@ -1,5 +1,6 @@
 package businesslogic.kitchenTask;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Shift {
@@ -21,7 +22,9 @@ public class Shift {
     }
 
     public String toString(){
-        return "Start: " + start + ", End: "+ end + ", Day: " + day+ ".\n";
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+        String date = DATE_FORMAT.format(day);
+        return "Start: " + start + ", End: "+ end + ", Day: " + date+ ".\n";
     }
     public Integer getId() {
         return id;

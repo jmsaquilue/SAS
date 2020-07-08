@@ -4,17 +4,27 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.SheetList">
    <center>
-      <ListView fx:id="sheetList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="sheetList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #514f5f;" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <FlowPane alignment="CENTER" hgap="10.0" prefHeight="38.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#nuovoButtonPressed" text="Nuovo" />
-            <Button mnemonicParsing="false" onAction="#apriButtonPressed" text="Apri" />
-            <Button mnemonicParsing="false" onAction="#fineButtonPressed" text="Fine" />
+            <Button mnemonicParsing="false" onAction="#nuovoButtonPressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Nuovo">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
+            <Button fx:id="apriButton" mnemonicParsing="false" onAction="#apriButtonPressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Apri">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#fineButtonPressed" style="-fx-background-color: #515d6d; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Fine" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
          </children>
       </FlowPane>
    </bottom>

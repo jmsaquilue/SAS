@@ -14,15 +14,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 public class SummarySheet {
     private int id;
     private User creator;
-    private Event event; // Otro cambio de nombre
+    private Event event;
     private static Map<Integer, Task> list = FXCollections.observableHashMap();
 
-    //private ArrayList<Task> list;
     private static Map<Integer, SummarySheet> loadedSheets = FXCollections.observableHashMap();
 
 
@@ -30,6 +30,12 @@ public class SummarySheet {
         this.event = event;
         this.creator = user;
 
+    }
+
+    public SummarySheet(int id,Event event,User user) {
+        this.id = id;
+        this.event = event;
+        this.creator = user;
     }
 
     public SummarySheet() {
@@ -51,19 +57,14 @@ public class SummarySheet {
     }
 
     public void loadList() {
+        list.entrySet().removeIf(t -> t.getKey() == 0);
         String query = "SELECT * FROM Tasks WHERE summaryid='"+id+"';";
         ArrayList<Task> newTask = new ArrayList<>();
-        ArrayList<Task> oldTask = new ArrayList<>();
-
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 int idT = rs.getInt("id");
-                if (list.containsKey(idT)) {
-                    Task t = list.get(idT);
-                    oldTask.add(t);
-                } else {
-
+                if (!list.containsKey(idT)) {
                     int timeEstimate = rs.getInt("timeEstimate");
                     int quantity = rs.getInt("quantity");
                     boolean complete = rs.getBoolean("complete");
@@ -76,14 +77,14 @@ public class SummarySheet {
         });
 
         for (Task t: newTask){
-            oldTask.add(t);
             list.put(t.getId(), t);
         }
+
     }
 
     public ArrayList<Task> getList(){
         loadList();
-        return (ArrayList<Task>) list.values();
+        return new ArrayList<Task>(list.values());
     }
 
     public void emptyList(int id){
@@ -152,12 +153,28 @@ public class SummarySheet {
 
     public Event getEvent(){ return event;}
 
+    public boolean exits(Recipe r) {
+        Iterator<Map.Entry<Integer,Task>> it = list.entrySet().iterator();
+        boolean exist = false;
+        while (it.hasNext()) {
+            Map.Entry<Integer,Task> e = it.next();
+            if (e.getValue().getRecipeid() == r.getId()){
+                exist = true;
+                break;
+            }
+        }
+
+        return exist;
+    }
 
     public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
         Task t = new Task(r, this.getId());
-        //t.saveTask(t);
         list.put(t.getId(),t);
         return t;
+    }
+
+    public void deleteTask(Recipe r) {
+        list.entrySet().removeIf(e -> e.getValue().getRecipeid()==r.getId());
     }
 
     public Boolean inList(Task t){
@@ -169,6 +186,7 @@ public class SummarySheet {
         }
         return b;
     }
+
 
 
 }

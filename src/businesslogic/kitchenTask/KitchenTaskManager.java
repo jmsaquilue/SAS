@@ -43,7 +43,6 @@ public class KitchenTaskManager {
 
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
-
         if(!user.isChef()){
             throw new UseCaseLogicException();
         }
@@ -70,12 +69,30 @@ public class KitchenTaskManager {
         if(!user.isChef()){
             throw new UseCaseLogicException();
         }
+        else if(selectedSheet == null || selectedSheet.exits(r)){
+            throw new SummarySheetException();
+        }
 
         Task t = selectedSheet.createTask(r);
 
         this.notifyRecipeAdded(t);
 
         return t;
+    }
+
+    public boolean deleteRecipe(Recipe r) throws UseCaseLogicException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+
+        if(!user.isChef()){
+            throw new UseCaseLogicException();
+        }
+        boolean inUse = r.inUse(selectedSheet);
+        if (!inUse){
+            selectedSheet.deleteTask(r);
+            this.notifyRecipeDeleted(r);
+        }
+
+        return !inUse;
     }
 
 
@@ -146,8 +163,7 @@ public class KitchenTaskManager {
         if (!user.isChef()) {
             throw new UseCaseLogicException();
         }
-
-        if (selectedSheet == null || slot.getT()==null || !(slot.getC()).availableShift(slot.getS())) {
+        if (selectedSheet == null || slot.getT()==null || (slot.getC()).availableShift(slot.getS())) {
             throw new SummarySheetException();
         }
 
@@ -169,6 +185,12 @@ public class KitchenTaskManager {
     private void notifyRecipeAdded(Task t) {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateRecipeAdded(t);
+        }
+    }
+
+    private void notifyRecipeDeleted(Recipe r){
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateRecipeDeleted(r,selectedSheet);
         }
     }
 
@@ -207,6 +229,7 @@ public class KitchenTaskManager {
     public void removeEventReceiver(TaskEventReceiver rec) {
         this.eventReceivers.remove(rec);
     }
+
 
 
 }

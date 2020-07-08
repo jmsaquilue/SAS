@@ -7,6 +7,7 @@ import persistence.ResultHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -24,11 +25,20 @@ public class Event {
         this.date = date;
     }
 
+    public Event(int id, String name,Date date){
+        this.id = id;
+        this.name = name;
+        this.date = date;
+    }
+
 
 
     @Override
     public String toString() {
-        return this.name + ", data: " + date;
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+        String day = DATE_FORMAT.format(date);
+
+        return this.name + ", data: " + day;
     }
 
     public boolean isRefered() {

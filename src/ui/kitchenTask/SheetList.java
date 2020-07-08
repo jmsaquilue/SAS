@@ -3,21 +3,21 @@ package ui.kitchenTask;
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
+import businesslogic.kitchenTask.Slot;
 import businesslogic.kitchenTask.SummarySheet;
 import businesslogic.kitchenTask.SummarySheetException;
 import businesslogic.user.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -27,6 +27,8 @@ public class SheetList {
 
     ObservableList<SummarySheet> sheetListItems;
 
+    @FXML
+    Button apriButton;
 
     @FXML
     ListView<SummarySheet> sheetList;
@@ -42,7 +44,10 @@ public class SheetList {
             dialog.setTitle("Nuovo foglio riepilogativo.");
             dialog.setHeaderText("Nuovo foglio riepilogativo.");
             dialog.setContentText("scegli l'evento da organizzare:");
-
+            ImageView img = new ImageView(this.getClass().getResource("../img/logo.png").toString());
+            img.setFitHeight(120);
+            img.setFitWidth(120);
+            dialog.setGraphic(img);
             Optional<Event> result = dialog.showAndWait();
             if (result.isPresent()) {
                 try {
@@ -82,23 +87,13 @@ public class SheetList {
 
     public void initialize() {
         if (sheetListItems == null) {
-            // TODO: Mucho que hacer.
             sheetListItems = CatERing.getInstance().getKitchenTaskManager().getAllSummarySheets();
             sheetList.setItems(sheetListItems);
             sheetList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-            /*
-            sheetList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SummarySheet>() {
-                @Override
-                public void changed(ObservableValue<? extends Menu> observableValue, Menu oldMenu, Menu newMenu) {
-                    User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                    eliminaButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    copiaButton.setDisable(newMenu == null);
-                }
+            apriButton.setDisable(true);
+            sheetList.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends SummarySheet> c) -> {
+                apriButton.setDisable(false);
             });
-
-             */
         }
     }
 

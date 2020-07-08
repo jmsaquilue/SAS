@@ -18,7 +18,7 @@ import java.util.Map;
 public class ShiftBoard {
     private static Map<Integer, Slot> list = FXCollections.observableHashMap();
 
-    public static ObservableList<Slot> sortedList(){
+    public static ObservableList<Slot> sortList(){
         LinkedHashMap<Integer, Slot> Sorted = new LinkedHashMap<>();
         list.entrySet()
                 .stream()
@@ -71,7 +71,7 @@ public class ShiftBoard {
                                     Cook c = new Cook(id2,username,password,name,surname,gender,age,email);
 
                                     String query4 = "SELECT COUNT(*) FROM Tasks WHERE id in (SELECT task_id FROM TaskCookShifts WHERE shift_id='"+
-                                            shift_id + "' and cook_id='"+cook_id+"') and summaryid="+n;
+                                            shift_id + "' and cook_id='"+cook_id+"');";
                                     PersistenceManager.executeQuery(query4, new ResultHandler() {
                                         @Override
                                         public void handle(ResultSet rs) throws SQLException {
@@ -119,7 +119,7 @@ public class ShiftBoard {
             }
         });
 
-        return sortedList();
+        return sortList();
     }
 
 
@@ -141,7 +141,7 @@ public class ShiftBoard {
     }
 
     public static void dropChoose(Slot slot) {
-        String querry = "DELETE FROM catering.TaskCookShifts WHERE cook_id='"+slot.getC().getId()+"' and '" +
+        String querry = "DELETE FROM catering.TaskCookShifts WHERE cook_id='"+slot.getC().getId()+"' and shift_id='" +
                 +slot.getS().getId()+ "';";
         int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
             @Override

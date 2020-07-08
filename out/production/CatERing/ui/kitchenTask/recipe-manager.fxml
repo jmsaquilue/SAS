@@ -13,20 +13,29 @@
 
 <BorderPane fx:id="containerPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.kitchenTask.RecipeContent">
    <top>
-      <Label fx:id="sheetLabel" prefHeight="58.0" prefWidth="600.0" text="Info Foglio" BorderPane.alignment="CENTER" />
+      <Label fx:id="sheetLabel" alignment="TOP_LEFT" prefHeight="58.0" prefWidth="600.0" text="Info Foglio" textFill="WHITE" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
    </top>
    <bottom>
       <FlowPane fx:id="fw" alignment="TOP_CENTER" prefHeight="63.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#turniButtonPressed" prefHeight="44.0" prefWidth="74.0" text="Turni">
+            <Button mnemonicParsing="false" onAction="#turniButtonPressed" prefHeight="44.0" prefWidth="74.0" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Turni">
                <FlowPane.margin>
                   <Insets right="10.0" />
                </FlowPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#fineButtonPressed" prefHeight="43.0" prefWidth="87.0" text="Fine">
+            <Button mnemonicParsing="false" onAction="#fineButtonPressed" prefHeight="43.0" prefWidth="87.0" style="-fx-background-color: #515d6d; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Fine" textFill="WHITE">
                <FlowPane.margin>
                   <Insets left="10.0" />
-               </FlowPane.margin></Button>
+               </FlowPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
          </children>
       </FlowPane>
    </bottom>
@@ -44,15 +53,21 @@
                <bottom>
                   <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="264.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#infoButtonPressed" text="Info">
+                        <Button fx:id="infoButton" mnemonicParsing="false" onAction="#infoButtonPressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Info">
                            <FlowPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </FlowPane.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addButtonPressed" text="Aggiungi">
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addButtonPressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Aggiungi">
                            <FlowPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </FlowPane.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
                         </Button>
                      </children>
                   </FlowPane>
@@ -61,9 +76,9 @@
                   <ListView fx:id="recipeListView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
                <top>
-                  <Label prefHeight="17.0" prefWidth="272.0" text="Ricette dispoibili" BorderPane.alignment="CENTER_LEFT">
+                  <Label prefHeight="17.0" prefWidth="272.0" text="Ricette dispoibili" textFill="WHITE" BorderPane.alignment="CENTER_LEFT">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="17.0" />
                      </font>
                      <BorderPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -81,14 +96,28 @@
                <bottom>
                   <FlowPane hgap="5.0" prefHeight="38.0" prefWidth="264.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" text="Rimuovi" />
+                        <Button fx:id="infoButton2" mnemonicParsing="false" onAction="#infoButton2Pressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Info">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <FlowPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </FlowPane.margin>
+                        </Button>
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonPressed" style="-fx-background-color: #ed7885; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Rimuovi">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <FlowPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </FlowPane.margin></Button>
                      </children>
                   </FlowPane>
                </bottom>
                <top>
-                  <Label prefHeight="17.0" prefWidth="272.0" text="Ricette aggiunte" BorderPane.alignment="CENTER_LEFT">
+                  <Label prefHeight="17.0" prefWidth="272.0" text="Ricette aggiunte" textFill="WHITE" BorderPane.alignment="CENTER_LEFT">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="17.0" />
                      </font>
                      <BorderPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

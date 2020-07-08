@@ -27,7 +27,7 @@ public class Slot implements Comparable<Slot>{
             r= r + "Shift: " + s.toString();
         }
         if(t!=null){
-            r= r + "Task: " + t.toString();
+            r= r + "Task: " + t.show();
         }
         if(c!=null){
             r=r + "Cook:" + c.toString() + ".\n";
@@ -82,26 +82,7 @@ public class Slot implements Comparable<Slot>{
         this.available = true;
     }
 
-    /*
-    public static Slot loadSlot(Task t, Cook c, Shift shift){
-        Slot s = new Slot();
 
-        String querry = "SELECT * FROM CookShifts WHERE shift_id='"+ shift.getId()+
-                "' and cook_id='"+c.getId()+"';";
-
-        PersistenceManager.executeQuery(querry, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-                s.id = rs.getInt("id");
-                s.t = t;
-                s.s = shift;
-                s.c = c;
-            }
-        });
-
-        return s;
-    }
-     */
 
 
 }

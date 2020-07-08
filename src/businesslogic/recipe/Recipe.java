@@ -70,14 +70,11 @@ public class Recipe {
             }
         });
 
-
-        for (Recipe s: recipes) {
-            recipesLoaded.put(s.id, s);
-        }
-        return FXCollections.observableArrayList(recipesLoaded.values());
+        return FXCollections.observableArrayList(recipes);
     }
 
     public static ObservableList<Recipe> loadSelectedRecipes(SummarySheet sheet){
+
         String query = "SELECT * FROM Recipes WHERE id in (SELECT recipeid FROM Tasks WHERE summaryid='"+sheet.getId()+"');";
         ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -103,5 +100,21 @@ public class Recipe {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean inUse(SummarySheet sheet) {
+        String query = "SELECT COUNT(*) FROM TaskCookShifts WHERE task_id in (SELECT id FROM Tasks WHERE " +
+                "summaryid='"+sheet.getId()+"' and recipeid='"+id+"');";
+        final int[] count = new int[1];
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                count[0] = rs.getInt(1);
+            }
+
+        });;
+
+        return count[0] > 0;
+
     }
 }

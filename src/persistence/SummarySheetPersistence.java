@@ -1,6 +1,7 @@
 package persistence;
 
 import businesslogic.kitchenTask.*;
+import businesslogic.recipe.Recipe;
 
 public class SummarySheetPersistence implements TaskEventReceiver {
 
@@ -13,6 +14,11 @@ public class SummarySheetPersistence implements TaskEventReceiver {
     @Override
     public void updateRecipeAdded(Task t){
         Task.saveTask(t);
+    }
+
+    @Override
+    public void updateRecipeDeleted(Recipe r, SummarySheet sheet){
+        Task.deleteRecipe(r,sheet);
     }
 
     @Override

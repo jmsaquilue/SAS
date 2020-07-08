@@ -14,7 +14,7 @@ public class Task {
     private int quantity;
     private boolean complete;
     private int idSummary;
-    private Recipe isPrepared; //No me gusta mucho el nombre
+    private Recipe isPrepared;
 
 
 
@@ -28,12 +28,20 @@ public class Task {
     @Override
     public String toString() {
         String r= "";
+        if(isPrepared != null){
+            r = r + " Receta: " + isPrepared.toString();
+        }
+        return r + ". \n";
+    }
+
+    public String show() {
+        String r= "";
         r=" Time Estimate=" + timeEstimate +
                 ", quantity=" + quantity;
         if(complete){
             r= r + " Completado ";
         }else {
-            r= r + " No completado ";
+            r= r + " Non completado ";
         }
         if(isPrepared != null){
             r = r + " Receta: " + isPrepared.toString();
@@ -42,6 +50,7 @@ public class Task {
     }
 
     public Task(Recipe r, int id){
+        this.id = 0;
         quantity=1;
         complete=false;
         isPrepared=r;
@@ -100,6 +109,22 @@ public class Task {
                 if (count == 0) {
                     t.id = rs.getInt(1);
                 }
+            }
+        });
+    }
+
+    public static void deleteRecipe(Recipe r, SummarySheet sheet){
+        String querry = "DELETE FROM catering.Tasks WHERE recipeid='"+r.getId()+"' and summaryid='" +
+                +sheet.getId()+ "';";
+        int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                //fa niente
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                //fa niente
             }
         });
     }
