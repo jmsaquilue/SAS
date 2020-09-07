@@ -48,6 +48,9 @@ public class ShiftManager {
     Button cancelliButton;
 
     @FXML
+    Button changeCookButton;
+
+    @FXML
     Button quantity;
     @FXML
     Button time;
@@ -81,14 +84,16 @@ public class ShiftManager {
             cancelliButton.setDisable(true);
             disponibili.setSelected(false);
             completi.setSelected(false);
-
+            changeCookButton.setDisable(true);
 
             shiftBoard.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Slot> c) -> {
                 ArrayList<Slot> slist=new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
                 assegniButton.setDisable(slist.size() == 0);
                 quantity.setDisable(slist.size() != 1 || slist.get(0).getAvailable());
+                changeCookButton.setDisable(slist.size() != 1 || slist.get(0).getAvailable());
                 time.setDisable(slist.size() != 1 || slist.get(0).getAvailable());
                 cancelliButton.setDisable(slist.size()!=1 || slist.get(0).getAvailable());
+
                 for(Slot s : slist){
                     if (!s.getAvailable()) {
                         assegniButton.setDisable(true);
@@ -241,6 +246,70 @@ public class ShiftManager {
             alert.showAndWait();
         }
     }
+
+    @FXML
+    public void changeCookButtonPressed(){
+        ArrayList<Cook> cooks = shiftBoard.getSelectionModel().getSelectedItems().get(0).getS().getCooks();
+
+        System.out.println(cooks);
+        Dialog<Result> dialog = new Dialog<>();
+
+        dialog.setTitle("Cambi cuoco.");
+        dialog.setHeaderText("Cambi cuoco.");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        Label cookLAbel = new Label("Scegli il cuoco incaricato:");
+        ComboBox<Cook> choiceCooks = new ComboBox<>(FXCollections.observableArrayList(cooks));
+        CheckBox cb = new CheckBox("Senza Cuoco");
+        choiceCooks.getSelectionModel().selectFirst();
+
+        cb.setOnAction((evt) -> {
+                    choiceCooks.setVisible(!cb.isSelected());
+                    cookLAbel.setVisible(!cb.isSelected());
+                });
+
+        if (cooks.size() >0 ) {
+            grid.add(cookLAbel, 0, 0);
+            grid.add(choiceCooks, 1, 0);
+        }
+        grid.add(cb, 0, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter((ButtonType button) -> {
+            if (button == ButtonType.OK) {
+                if (cb.isSelected() || cooks.size() == 0) {
+                    return new Result(null, null, cb.isSelected());
+                }
+                else {
+                    return new Result(null, choiceCooks.getValue(), cb.isSelected());
+
+                }
+            }
+            return null;
+        });
+
+        Optional<Result> result = dialog.showAndWait();
+
+        try {
+            ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
+            ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
+            Slot newSlot = CatERing.getInstance().getKitchenTaskManager().setCook(old.get(0), result.get().getC());
+            total.remove(old.get(0));
+            total.add(newSlot);
+            Collections.sort(total);
+            boardItems = FXCollections.observableArrayList(total);
+            filter();
+        } catch (UseCaseLogicException | SummarySheetException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
     @FXML
     public void editButtonQuantity(){

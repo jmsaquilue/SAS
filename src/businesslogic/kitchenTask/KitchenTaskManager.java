@@ -126,8 +126,6 @@ public class KitchenTaskManager {
 
     public Slot assignTask(Task t, Slot slot) throws UseCaseLogicException, SummarySheetException {
         return assignTask(t,slot,null);
-
-
     }
 
     public Slot assignTask(Task t, Slot slot, Cook c) throws UseCaseLogicException, SummarySheetException {
@@ -135,7 +133,7 @@ public class KitchenTaskManager {
         if (!user.isChef()) {
             throw new UseCaseLogicException();
         }
-        if (selectedSheet == null || !selectedSheet.inList(t) || (slot.getC() != null && !(slot.getC()).availableShift(slot.getS()))
+        if (selectedSheet == null || !selectedSheet.inList(t) || t == null || (slot.getC() != null && !(slot.getC()).availableShift(slot.getS()))
                 || (c != null && !(c.availableShift(slot.getS())))) {
             throw new SummarySheetException();
         }
@@ -145,7 +143,6 @@ public class KitchenTaskManager {
 
         slot.setCook(c);
         if (c != null) {
-
             slot.getS().removeCook(c);
         }
 
@@ -165,6 +162,35 @@ public class KitchenTaskManager {
         }
         return changes;
     }
+
+    public Slot setCook(Slot s, Cook c) throws UseCaseLogicException, SummarySheetException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (!user.isChef()) {
+            throw new UseCaseLogicException();
+        }
+
+        System.out.println(c);
+        System.out.println(s.getC());
+
+        if (selectedSheet == null || (s.getC() != null && (s.getC()).availableShift(s.getS()))  || (c != null && !(c.availableShift(s.getS())))) {
+            throw new SummarySheetException();
+        }
+
+        if(s.getC() != null){
+            s.getS().addCook(s.getC());
+        }
+        s.setCook(c);
+        if (c != null) {
+            s.getS().removeCook(c);
+        }
+        this.notifyCookChanged(s);
+
+        return s;
+
+
+    }
+
+
 
     public Slot setQuantityTask(Slot s, int q)throws UseCaseLogicException, SummarySheetException{
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
@@ -238,6 +264,12 @@ public class KitchenTaskManager {
     private void notifyTaskAssigned(Slot slot) {
         for (TaskEventReceiver er: this.eventReceivers){
             er.updateTaskAssigned(slot);
+        }
+    }
+
+    private void notifyCookChanged(Slot s) {
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateCookChanged(s);
         }
     }
 

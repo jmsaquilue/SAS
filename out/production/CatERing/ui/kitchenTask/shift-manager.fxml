@@ -21,6 +21,11 @@
                <FlowPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="5.0" />
                </FlowPane.margin></Button>
+            <Button fx:id="changeCookButton" mnemonicParsing="false" onAction="#changeCookButtonPressed" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Cambi cuoco">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
             <Button fx:id="quantity" mnemonicParsing="false" onAction="#editButtonQuantity" style="-fx-background-color: #eda678; -fx-background-radius: 5em; -fx-border-radius: 5em;" text="Editare Quantità">
                <font>
                   <Font size="15.0" />

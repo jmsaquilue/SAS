@@ -27,6 +27,11 @@ public class SummarySheetPersistence implements TaskEventReceiver {
     }
 
     @Override
+    public void updateCookChanged(Slot slot){
+        ShiftBoard.saveCook(slot);
+    }
+
+    @Override
     public void updateTaskQuantity(Task t){
         Task.saveQuantity(t);
     }

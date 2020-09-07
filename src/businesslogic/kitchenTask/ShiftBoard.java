@@ -164,4 +164,26 @@ public class ShiftBoard {
             }
         });
     }
+
+    public static void saveCook(Slot slot){
+        String value;
+        if (slot.getC() != null)
+            value = String.valueOf(slot.getC().getId());
+        else
+            value = "NULL";
+
+        String querry = "UPDATE TaskCookShifts SET cook_id="+value+" WHERE shift_id='" +slot.getS().getId()+"' and " +
+                "task_id='"+slot.getT().getId()+"';";
+        int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                //fa niente
+            }
+        });
+
+    }
 }
