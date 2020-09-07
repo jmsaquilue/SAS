@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-07-2020 a las 18:58:20
--- Versión del servidor: 5.7.30-0ubuntu0.18.04.1
+-- Tiempo de generación: 07-09-2020 a las 13:49:27
+-- Versión del servidor: 5.7.31-0ubuntu0.18.04.1
 -- Versión de PHP: 7.3.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -174,7 +174,7 @@ INSERT INTO `SummarySheets` (`id`, `creator`, `event`) VALUES
 CREATE TABLE `TaskCookShifts` (
   `id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL,
-  `cook_id` int(11) NOT NULL,
+  `cook_id` int(11) DEFAULT NULL,
   `shift_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -190,8 +190,21 @@ CREATE TABLE `Tasks` (
   `quantity` int(11) DEFAULT '1',
   `complete` tinyint(1) NOT NULL DEFAULT '0',
   `recipeid` int(11) DEFAULT NULL,
-  `summaryid` int(11) DEFAULT NULL
+  `summaryid` int(11) DEFAULT NULL,
+  `pos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `Tasks`
+--
+
+INSERT INTO `Tasks` (`id`, `timeEstimate`, `quantity`, `complete`, `recipeid`, `summaryid`, `pos`) VALUES
+(1, 890, 780, 0, 1, 11, 0),
+(3, 0, 1, 0, 3, 11, 1),
+(5, 0, 1, 0, 3, 10, 0),
+(6, 0, 1, 0, 4, 10, 2),
+(7, 0, 1, 0, 1, 10, 1),
+(8, 0, 1, 0, 2, 10, 3);
 
 -- --------------------------------------------------------
 
@@ -367,13 +380,13 @@ ALTER TABLE `SummarySheets`
 -- AUTO_INCREMENT de la tabla `TaskCookShifts`
 --
 ALTER TABLE `TaskCookShifts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- AUTO_INCREMENT de la tabla `Tasks`
 --
 ALTER TABLE `Tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `Users`
