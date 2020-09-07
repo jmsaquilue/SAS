@@ -75,8 +75,11 @@ public class Recipe {
 
     public static ObservableList<Recipe> loadSelectedRecipes(SummarySheet sheet){
 
-        String query = "SELECT * FROM Recipes WHERE id in (SELECT recipeid FROM Tasks WHERE summaryid='"+sheet.getId()+"');";
+
+        String query = "SELECT r.id, r.name, r.description, t.pos FROM Recipes r, Tasks t WHERE t.summaryid='"+sheet.getId()+
+                "' and t.recipeid=r.id ORDER BY pos;";
         ArrayList<Recipe> recipes = new ArrayList<>();
+
 
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override

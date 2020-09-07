@@ -7,6 +7,8 @@ import persistence.PersistenceManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Task {
     private int id;
@@ -15,6 +17,7 @@ public class Task {
     private boolean complete;
     private int idSummary;
     private Recipe isPrepared;
+    private int pos;
 
 
 
@@ -25,11 +28,13 @@ public class Task {
     }
 
 
+
+
     @Override
     public String toString() {
         String r= "";
         if(isPrepared != null){
-            r = r + " Receta: " + isPrepared.toString();
+            r = r + " Ricetta: " + isPrepared.toString();
         }
         return r + ". \n";
     }
@@ -49,21 +54,23 @@ public class Task {
         return r + ". \n";
     }
 
-    public Task(Recipe r, int id){
+    public Task(Recipe r, int id, int pos){
         this.id = 0;
+        this.pos = pos;
         quantity=1;
         complete=false;
         isPrepared=r;
         idSummary=id;
     }
 
-    public Task(int id, int timeEstimate, int quantity, boolean complete, int idSummary, Recipe recipe) {
+    public Task(int id, int timeEstimate, int quantity, boolean complete, int idSummary, Recipe recipe, int pos) {
         this.id = id;
         this.timeEstimate = timeEstimate;
         this.quantity = quantity;
         this.complete = complete;
         this.idSummary = idSummary;
         this.isPrepared = recipe;
+        this.pos = pos;
     }
 
     public int getId(){
@@ -87,12 +94,13 @@ public class Task {
     public int getIdSummary(){
         return idSummary;
     }
+    public int getPos(){return pos;}
 
     public void setQuantity(int q){quantity=q;}
     public void setTimeEstimate(int t){timeEstimate=t;}
 
     public static void saveTask(Task t){
-        String querry = "INSERT INTO catering.Tasks (timeEstimate, quantity, complete, recipeid, summaryid) VALUES (?, ?, ?, ?, ?);";
+        String querry = "INSERT INTO catering.Tasks (timeEstimate, quantity, complete, recipeid, summaryid, pos) VALUES (?, ?, ?, ?, ?,?);";
         int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
@@ -101,6 +109,7 @@ public class Task {
                 ps.setBoolean(3,t.getcomplete());
                 ps.setInt(4, t.getRecipeid());
                 ps.setInt(5, t.getIdSummary());
+                ps.setInt(6,t.getPos());
             }
 
             @Override
@@ -127,6 +136,8 @@ public class Task {
                 //fa niente
             }
         });
+        sortTasks(sheet);
+
     }
 
 
@@ -160,4 +171,29 @@ public class Task {
     }
 
 
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public static void sortTasks(SummarySheet sheet) {
+        Map<Integer,Task> list = sheet.getTasks();
+        Iterator<Map.Entry<Integer,Task>> it = list.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<Integer,Task> e = it.next();
+            Task t = e.getValue();
+            String querry = "UPDATE Tasks SET pos="+t.getPos()+" WHERE id=" +t.getId()+";";
+            int[] result = PersistenceManager.executeBatchUpdate(querry, 1, new BatchUpdateHandler() {
+                @Override
+                public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                }
+
+                @Override
+                public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                    //fa niente
+                }
+            });
+        }
+
+    }
 }

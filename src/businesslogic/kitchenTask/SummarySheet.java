@@ -69,8 +69,9 @@ public class SummarySheet {
                     int quantity = rs.getInt("quantity");
                     boolean complete = rs.getBoolean("complete");
                     int recipeId = rs.getInt("recipeid");
+                    int pos = rs.getInt("pos");
                     Recipe r = businesslogic.recipe.Recipe.loadRecipeById(recipeId);
-                    Task t = new Task(idT,timeEstimate,quantity,complete,id,r);
+                    Task t = new Task(idT,timeEstimate,quantity,complete,id,r,pos);
                     newTask.add(t);
                 }
             }
@@ -80,6 +81,11 @@ public class SummarySheet {
             list.put(t.getId(), t);
         }
 
+    }
+
+    public Map<Integer, Task> getTasks(){
+        loadList();
+        return list;
     }
 
     public ArrayList<Task> getList(){
@@ -168,13 +174,64 @@ public class SummarySheet {
     }
 
     public Task createTask(Recipe r)throws UseCaseLogicException, SummarySheetException{
-        Task t = new Task(r, this.getId());
+        Task t = new Task(r, this.getId(),list.size());
         list.put(t.getId(),t);
         return t;
     }
 
+    public void move(Recipe r, int pos) {
+        Iterator<Map.Entry<Integer,Task>> it = list.entrySet().iterator();
+        int oldPos = pos;
+        Map.Entry<Integer,Task> e = null;
+        while (it.hasNext()) {
+            e = it.next();
+            if (e.getValue().getRecipeid() == r.getId()){
+                oldPos = e.getValue().getPos();
+                break;
+
+            }
+        }
+        Iterator<Map.Entry<Integer,Task>> it2 = list.entrySet().iterator();
+
+        while (it2.hasNext()) {
+            Map.Entry<Integer, Task> ee = it2.next();
+            int currentPos = ee.getValue().getPos();
+            if ((currentPos >= pos && currentPos < oldPos) || (currentPos <= pos && currentPos > oldPos)) {
+                if (oldPos > pos)
+                    ee.getValue().setPos(currentPos + 1);
+                else
+                    ee.getValue().setPos(currentPos - 1);
+            }
+        }
+        e.getValue().setPos(pos);
+
+
+    }
+
     public void deleteTask(Recipe r) {
+        Iterator<Map.Entry<Integer,Task>> it = list.entrySet().iterator();
+        boolean change = false;
+        int oldPos = 0;
+        while (it.hasNext()) {
+            Map.Entry<Integer,Task> e = it.next();
+            if (e.getValue().getRecipeid() == r.getId()){
+                oldPos = e.getValue().getPos();
+                break;
+            }
+        }
+
+        Iterator<Map.Entry<Integer,Task>> it2 = list.entrySet().iterator();
+
+        while (it2.hasNext()) {
+            Map.Entry<Integer, Task> e = it2.next();
+            int currentPos = e.getValue().getPos();
+            if (currentPos > oldPos) {
+                e.getValue().setPos(currentPos - 1);
+            }
+        }
+
         list.entrySet().removeIf(e -> e.getValue().getRecipeid()==r.getId());
+
     }
 
     public Boolean inList(Task t){
@@ -186,7 +243,6 @@ public class SummarySheet {
         }
         return b;
     }
-
 
 
 }

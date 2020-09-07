@@ -2,20 +2,20 @@ package businesslogic.kitchenTask;
 
 import businesslogic.user.Cook;
 
+import java.util.ArrayList;
+
 public class Slot implements Comparable<Slot>{
-    private int id;
     private Shift s;
     private Task t;
     private Cook c;
     private Boolean available;
 
     public Slot(){
-        this.id = 0;
+
     }
 
 
-    public Slot(int id, Shift s, Cook c, Task t, boolean b) {
-        this.id = id;
+    public Slot( Shift s, Cook c, Task t, boolean b) {
         this.s = s;
         this.c = c;
         this.t = t;
@@ -24,26 +24,34 @@ public class Slot implements Comparable<Slot>{
     public String toString(){
         String r="";
         if(s!=null){
-            r= r + "Shift: " + s.toString();
+            r= r + "Turno: " + s.toString();
         }
         if(t!=null){
-            r= r + "Task: " + t.show();
-        }
-        if(c!=null){
-            r=r + "Cook:" + c.toString() + ".\n";
+            r= r + "Compito: " + t.show();
         }
         if(available){
-            r= r + "Disponible";
+            r = r + "Disponibile\n";
+            r += "Cuochi disponibili: ";
+            for (Cook cc: s.getCooks()){
+                r += cc.toString() + ", ";
+            }
+            r = r.substring(0, r.length()-2);
+            r += ".";
         }else {
-            r= r + "No Disponible";
+            r= r + "Non disponibile\n";
+            if (c != null)
+                r = r + "Cuoco:" + c.toString();
+            else
+                r = r + "Cuoco non assegnato.";
         }
+
         return r;
     }
 
     @Override
     public int compareTo(Slot slot1)
     {
-        if (slot1.getS().getDay() == s.getDay()){
+        if (slot1.getS().getDay().equals(s.getDay())){
             return Integer.compare(s.getStart(),slot1.getS().getStart());
         }
         else {
@@ -83,6 +91,7 @@ public class Slot implements Comparable<Slot>{
     }
 
 
-
-
+    public void setCook(Cook c) {
+        this.c = c;
+    }
 }

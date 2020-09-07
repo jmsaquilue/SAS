@@ -3,16 +3,17 @@ package ui.kitchenTask;
 import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
-import businesslogic.kitchenTask.Slot;
-import businesslogic.kitchenTask.SummarySheet;
-import businesslogic.kitchenTask.SummarySheetException;
-import businesslogic.kitchenTask.Task;
+import businesslogic.kitchenTask.*;
+import businesslogic.user.Cook;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -64,7 +65,6 @@ public class ShiftManager {
     KitchenTaskManager mainPaneController;
 
 
-    //TODO: después de cada cambio llama a la función filter.
 
 
 
@@ -79,7 +79,9 @@ public class ShiftManager {
             quantity.setDisable(true);
             time.setDisable(true);
             cancelliButton.setDisable(true);
-            //TODO: si has seleccionado uno ocupado, no te deja asignar compito
+            disponibili.setSelected(false);
+            completi.setSelected(false);
+
 
             shiftBoard.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Slot> c) -> {
                 ArrayList<Slot> slist=new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
@@ -95,54 +97,132 @@ public class ShiftManager {
                 }
             });
 
-
-
-            /*
-            shiftBoard.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Slot>() {
-                @Override
-                public void changed(ObservableValue<? extends Slot> observableValue) {
-                    for (Slot )
-                    User u = CatERing.getInstance().getUserManager().getCurrentUser();
-                    assegniButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    //apriButton.setDisable(newMenu == null || newMenu.isInUse() || !newMenu.isOwner(u));
-                    //copiaButton.setDisable(newMenu == null);
-                }
-            });*/
         }
 
-
-        /*
-        inicRecipeListViewItems = CatERing.getInstance().getRecipeManager().getAllSelectedRecipes(currentSheet);
-        selectedRecipeListViewItems = FXCollections.observableArrayList(inicRecipeListViewItems);
-        selectedRecipeListView.setItems(inicRecipeListViewItems);
-        selectedRecipeListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);*/
     }
 
     public void setKitchenTaskManagerController(KitchenTaskManager kitchenTaskManager) {
         mainPaneController = kitchenTaskManager;
     }
 
-    public void assegniButtonPressed(){
-        ArrayList<Task> choices = CatERing.getInstance().getKitchenTaskManager().getAvailableTask();
 
-        if (choices.size() > 0) {
-            ChoiceDialog<Task> dialog = new ChoiceDialog<>(choices.get(0), choices);
+    private class Result{
+        private Task t;
+        private Cook c;
+        private boolean setCook;
+
+        Result(Task t, Cook c, boolean senza){
+            this.t = t;
+            this.setCook = !senza;
+            if (setCook){
+                this.c = c;
+            }
+            else {
+                this.c = null;
+            }
+        }
+
+        public Task getT() {
+            return t;
+        }
+
+        public Cook getC(){
+            return c;
+        }
+
+        public boolean getSetCook(){
+            return setCook;
+        }
+    }
+
+    public void assegniButtonPressed(){
+        ArrayList<Shift> shifts = new ArrayList<>();
+        for (Slot s : shiftBoard.getSelectionModel().getSelectedItems())
+            shifts.add(s.getS());
+
+        ArrayList<Task> choices = CatERing.getInstance().getKitchenTaskManager().getAvailableTask(shifts);
+        ArrayList<Cook> cooks = null;
+
+        cooks = shiftBoard.getSelectionModel().getSelectedItems().get(0).getS().getCooks();
+
+
+
+        if (choices.size() > 0 && (shiftBoard.getSelectionModel().getSelectedItems().size() > 1 || cooks.size() > 0)) {
+            Dialog<Result> dialog = new Dialog<>();
             dialog.setTitle("Assegni compito.");
             dialog.setHeaderText("Assegni compito.");
-            dialog.setContentText("Scegli il compito da assegnare:");
 
-            Optional<Task> result = dialog.showAndWait();
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            ComboBox<Task> choiceTask = new ComboBox<>(FXCollections.observableArrayList(choices));
+            choiceTask.getSelectionModel().selectFirst();
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            grid.add(new Label("Scegli il compito da assegnare:"), 0, 0);
+            grid.add(choiceTask, 1, 0);
+            Label cookLAbel = new Label("Scegli il cuoco incaricato (opzionale):");
+            ComboBox<Cook> choiceCooks = new ComboBox<>(FXCollections.observableArrayList(cooks));
+            CheckBox cb = new CheckBox("Senza Cuoco");
+            choiceCooks.getSelectionModel().selectFirst();
+
+            cb.setOnAction((evt) -> {
+                choiceCooks.setVisible(!cb.isSelected());
+                cookLAbel.setVisible(!cb.isSelected());
+            });
+
+            if (shiftBoard.getSelectionModel().getSelectedItems().size() == 1) {
+                grid.add(cookLAbel, 0, 1);
+                grid.add(choiceCooks, 1, 1);
+                grid.add(cb, 0, 2);
+            }
+
+
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter((ButtonType button) -> {
+                if (button == ButtonType.OK) {
+                    if (shiftBoard.getSelectionModel().getSelectedItems().size() == 1) {
+                        return new Result(choiceTask.getValue(), choiceCooks.getValue(), cb.isSelected());
+                    }
+                    else {
+                        return new Result(choiceTask.getValue(), null, false);
+                    }
+                }
+                return null;
+            });
+
+            Optional<Result> result = dialog.showAndWait();
             if (result.isPresent()) {
                 try {
                     ArrayList<Slot> old = new ArrayList<Slot>(shiftBoard.getSelectionModel().getSelectedItems());
                     ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
                     total.removeAll(old);
                     if (shiftBoard.getSelectionModel().getSelectedItems().size() > 1){
-                        ArrayList<Slot> newSlots = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get(),old);
+                        ArrayList<Slot> newSlots = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get().getT(),old);
+                        for (Slot s: old) {
+                            if (!s.getS().isFull()) {
+                                Slot copy = new Slot(s.getS(), null, null, true);
+                                total.add(copy);
+                            }
+                        }
                         total.addAll(newSlots);
                     }
                     else {
-                        Slot newSlot = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get(),old.get(0));
+                        Slot newSlot = null;
+
+                        if (result.get().getSetCook()) {
+                            newSlot = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get().getT(), old.get(0),
+                            result.get().getC());
+                        }
+                        else{
+                            newSlot = CatERing.getInstance().getKitchenTaskManager().assignTask(result.get().getT(), old.get(0));
+                        }
+                        if (!old.get(0).getS().isFull()){
+                            Slot copy = new Slot(old.get(0).getS(),null,null,true);
+                            total.add(copy);
+                        }
                         total.add(newSlot);
                     }
                     Collections.sort(total);
@@ -250,9 +330,11 @@ public class ShiftManager {
         if (old.size() == 1){
             try {
                 ArrayList<Slot> total = new ArrayList<Slot>(boardItems);
+                boolean wasFull = old.get(0).getS().isFull();
                 Slot newSlot = CatERing.getInstance().getKitchenTaskManager().dischargeTask(old.get(0));
                 total.removeAll(old);
-                total.add(newSlot);
+                if (wasFull)
+                    total.add(newSlot);
                 boardItems = FXCollections.observableArrayList(total);
                 shiftBoard.setItems(boardItems);
                 Collections.sort(total);

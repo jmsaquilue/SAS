@@ -4,10 +4,12 @@ import businesslogic.CatERing;
 import businesslogic.UseCaseLogicException;
 import businesslogic.event.Event;
 import businesslogic.recipe.Recipe;
+import businesslogic.user.Cook;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class KitchenTaskManager {
     private SummarySheet selectedSheet;
@@ -95,31 +97,65 @@ public class KitchenTaskManager {
         return !inUse;
     }
 
+    public void move(Recipe r, int pos) throws UseCaseLogicException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+
+        if(!user.isChef()){
+            throw new UseCaseLogicException();
+        }
+        boolean inUse = r.inUse(selectedSheet);
+        if (!inUse){
+            selectedSheet.move(r,pos);
+            this.notifyMovedRecipes(selectedSheet);
+        }
+    }
+
+
 
     public ObservableList<Slot> getShifts(){
         return ShiftBoard.loadAllShift(selectedSheet);
     }
 
-    public ArrayList<Task> getAvailableTask() {
-        return selectedSheet.getList();
+    public ArrayList<Task> getAvailableTask(ArrayList<Shift> shifts) {
+        Map<Integer,Task> all = selectedSheet.getTasks();
+        for (Shift s: shifts){
+            all = s.getAvailableTask(all);
+        }
+        return new ArrayList<Task> (all.values());
     }
 
     public Slot assignTask(Task t, Slot slot) throws UseCaseLogicException, SummarySheetException {
-            User user = CatERing.getInstance().getUserManager().getCurrentUser();
-            if (!user.isChef()) {
-                throw new UseCaseLogicException();
-            }
+        return assignTask(t,slot,null);
 
-            if (selectedSheet == null || !selectedSheet.inList(t) || !(slot.getC()).availableShift(slot.getS())) {
-                throw new SummarySheetException();
-            }
 
-            slot.setTask(t);
-            slot.disavailable();
+    }
 
-            this.notifyTaskAssigned(slot);
+    public Slot assignTask(Task t, Slot slot, Cook c) throws UseCaseLogicException, SummarySheetException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (!user.isChef()) {
+            throw new UseCaseLogicException();
+        }
+        if (selectedSheet == null || !selectedSheet.inList(t) || (slot.getC() != null && !(slot.getC()).availableShift(slot.getS()))
+                || (c != null && !(c.availableShift(slot.getS())))) {
+            throw new SummarySheetException();
+        }
+
+        if (!slot.getAvailable())
+            this.notifyTaskdischarged(slot,slot.getT());
+
+        slot.setCook(c);
+        if (c != null) {
+
+            slot.getS().removeCook(c);
+        }
+
+        slot.setTask(t);
+        slot.disavailable();
+
+        this.notifyTaskAssigned(slot);
 
         return slot;
+
     }
 
     public ArrayList<Slot> assignTask(Task t, ArrayList<Slot> slots) throws UseCaseLogicException, SummarySheetException {
@@ -163,14 +199,19 @@ public class KitchenTaskManager {
         if (!user.isChef()) {
             throw new UseCaseLogicException();
         }
-        if (selectedSheet == null || slot.getT()==null || (slot.getC()).availableShift(slot.getS())) {
+        if (selectedSheet == null || slot.getT()==null || (slot.getC() != null && (slot.getC()).availableShift(slot.getS()))){
             throw new SummarySheetException();
         }
+
+        Task old = slot.getT();
 
         slot.removeTask();
         slot.setFree();
 
-        this.notifyTaskdischarged(slot);
+        if (slot.getC() != null)
+            slot.getS().addCook(slot.getC());
+
+        this.notifyTaskdischarged(slot,old);
 
         return slot;
     }
@@ -212,9 +253,15 @@ public class KitchenTaskManager {
         }
     }
 
-    private void notifyTaskdischarged(Slot slot) {
+    private void notifyTaskdischarged(Slot slot, Task task) {
         for (TaskEventReceiver er: this.eventReceivers){
-            er.updateTaskdischarged(slot);
+            er.updateTaskdischarged(slot,task);
+        }
+    }
+
+    private void notifyMovedRecipes(SummarySheet sheet) {
+        for (TaskEventReceiver er: this.eventReceivers){
+            er.updateMovedTasks(sheet);
         }
     }
 
@@ -229,6 +276,7 @@ public class KitchenTaskManager {
     public void removeEventReceiver(TaskEventReceiver rec) {
         this.eventReceivers.remove(rec);
     }
+
 
 
 

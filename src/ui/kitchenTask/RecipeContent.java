@@ -8,6 +8,8 @@ import businesslogic.recipe.Recipe;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -16,7 +18,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class RecipeContent {
@@ -33,6 +38,12 @@ public class RecipeContent {
 
     @FXML
     Button deleteButton;
+
+    @FXML
+    Button up;
+
+    @FXML
+    Button down;
 
     @FXML
     GridPane recipeview;
@@ -76,6 +87,9 @@ public class RecipeContent {
         }
         addButton.setDisable(true);
         infoButton.setDisable(true);
+        up.setDisable(true);
+        down.setDisable(true);
+
         infoButton2.setDisable(true);
         deleteButton.setDisable(true);
         recipeListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Recipe> c) -> {
@@ -85,6 +99,9 @@ public class RecipeContent {
         selectedRecipeListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends Recipe> c) -> {
             deleteButton.setDisable(selectedRecipeListView.getSelectionModel().getSelectedItems().isEmpty());
             infoButton2.setDisable(selectedRecipeListView.getSelectionModel().getSelectedItems().isEmpty());
+            int pos = selectedRecipeListView.getSelectionModel().getSelectedIndex();
+            up.setDisable(pos <= 0);
+            down.setDisable(pos >= selectedRecipeListViewItems.size() -1);
         });
 
     }
@@ -208,6 +225,31 @@ public class RecipeContent {
     public void turniButtonPressed(){
         mainPaneController.showShift(currentSheet, sheetchangeshift);
         sheetchangeshift=false;
+    }
+
+    @FXML
+    public void upPressed() {
+        this.changePosition(-1);
+    }
+
+
+    @FXML
+    public void downPressed() {
+        this.changePosition(+1);
+    }
+
+    private void changePosition(int change) {
+        int newpos = selectedRecipeListView.getSelectionModel().getSelectedIndex() + change;
+        Recipe r = selectedRecipeListView.getSelectionModel().getSelectedItem();
+        try {
+            CatERing.getInstance().getKitchenTaskManager().move(r, newpos);
+            selectedRecipeListViewItems.remove(r);
+            selectedRecipeListViewItems.add(newpos,r);
+
+            selectedRecipeListView.getSelectionModel().select(newpos);
+        } catch (UseCaseLogicException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

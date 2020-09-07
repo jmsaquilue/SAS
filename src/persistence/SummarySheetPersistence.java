@@ -37,8 +37,13 @@ public class SummarySheetPersistence implements TaskEventReceiver {
     }
 
     @Override
-    public void updateTaskdischarged(Slot slot){
-        ShiftBoard.dropChoose(slot);
+    public void updateTaskdischarged(Slot slot, Task t){
+        ShiftBoard.dropChoose(slot,t);
+    }
+
+    @Override
+    public void updateMovedTasks(SummarySheet sheet){
+        Task.sortTasks(sheet);
     }
 
 }
